@@ -1,0 +1,326 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Swagger Test",
+    "description": "\u003Ch3\u003ESwagger test\u003C/h3\u003E",
+    "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Balance",
+      "description": "잔액 관련 API"
+    },
+    {
+      "name": "상품 API",
+      "description": "상품 관련 API입니다."
+    },
+    {
+      "name": "Coupon",
+      "description": "쿠폰 관련 API"
+    },
+    {
+      "name": "주문 API",
+      "description": "상품 주문 관련 API"
+    }
+  ],
+  "paths": {
+    "/wallet/charge": {
+      "post": {
+        "tags": [
+          "Balance"
+        ],
+        "summary": "잔액 충전",
+        "description": "요청된 금액을 사용자의 잔액에 충전합니다.",
+        "operationId": "chargeBalance",
+        "requestBody": {
+          "description": "충전 요청 정보",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChargeRequestDto"
+              },
+              "example": {
+                "userId": 1,
+                "amount": 10000
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "충전 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "충전 실패",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders": {
+      "post": {
+        "tags": [
+          "주문 API"
+        ],
+        "summary": "상품 주문",
+        "description": "사용자가 상품을 주문하는 API입니다.",
+        "operationId": "orderPoroduct",
+        "requestBody": {
+          "description": "주문 요청 정보",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderRequestDto"
+              },
+              "example": {
+                "userId": 1,
+                "productId": 100,
+                "quantity": 2
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "주문 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청"
+          },
+          "500": {
+            "description": "서버 오류"
+          }
+        }
+      }
+    },
+    "/coupons/issue": {
+      "post": {
+        "tags": [
+          "Coupon"
+        ],
+        "summary": "쿠폰 발급",
+        "description": "유저 ID와 쿠폰 ID를 입력받아 쿠폰을 발급합니다.",
+        "operationId": "issueCoupon",
+        "requestBody": {
+          "description": "쿠폰 발급 요청",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CouponIssueRequestDto"
+              },
+              "example": {
+                "userId": 1,
+                "couponId": 100
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "쿠폰 발급 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "쿠폰 발급 실패",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/wallet/balance/{userId}": {
+      "get": {
+        "tags": [
+          "Balance"
+        ],
+        "summary": "잔액 조회",
+        "description": "사용자의 현재 잔액을 조회합니다.",
+        "operationId": "getTotalBalance",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "잔액 조회 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "잔액 조회 실패",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "tags": [
+          "상품 API"
+        ],
+        "summary": "상품 목록 조회",
+        "description": "전체 상품 목록을 조회합니다.",
+        "operationId": "getProductInfo",
+        "parameters": [
+          {
+            "name": "arg0",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ProductRequestDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "상품 목록 조회 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "서버 오류 발생"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ChargeRequestDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "amount": {
+            "type": "number"
+          }
+        }
+      },
+      "ResponseDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "OrderRequestDto": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "couponId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "goodsId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "CouponIssueRequestDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "couponId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ProductRequestDto": {
+        "type": "object",
+        "properties": {
+          "goodsId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "goodsName": {
+            "type": "string"
+          },
+          "goodsType": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
