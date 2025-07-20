@@ -53,7 +53,7 @@ public class ProductController {
             res.setCode(500);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
         }
-
         return ResponseEntity.ok(res);
     }
+
 }
