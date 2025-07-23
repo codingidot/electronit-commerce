@@ -21,11 +21,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kr.hhplus.be.server.dto.balance.BalanceDto;
 import kr.hhplus.be.server.dto.coupon.CouponDto;
 import kr.hhplus.be.server.dto.coupon.CouponIssueRequestDto;
 import kr.hhplus.be.server.dto.order.OrderRequestDto;
 import kr.hhplus.be.server.dto.produt.ProductDto;
+import kr.hhplus.be.server.dto.user.UserDto;
 import kr.hhplus.be.server.mock.FakeData;
 
 @WebMvcTest
@@ -62,7 +62,7 @@ public class MockApiTest {
     void getBalanceInfoTest() throws Exception {
     	// given
         Long userId = 1L;
-        BalanceDto bal = new BalanceDto(userId,  "홍길동", new BigDecimal("5000.00"));
+        UserDto bal = new UserDto(userId,  "홍길동", new BigDecimal("5000.00"));
 
         Mockito.when(fakeData.getBalanceInfo(userId)).thenReturn(bal);
 
