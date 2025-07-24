@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.hhplus.be.server.dto.coupon.CouponDto;
 import kr.hhplus.be.server.dto.order.OrderDto;
@@ -34,6 +35,7 @@ public class OrderFacade {
 		this.userRepository = userRepository;
 	}
 	
+	@Transactional(rollbackFor = Exception.class)
 	public void order(OrderRequestDto request) throws Exception {
 		//상품정보
 		Long goodsId = request.getGoodsId();
