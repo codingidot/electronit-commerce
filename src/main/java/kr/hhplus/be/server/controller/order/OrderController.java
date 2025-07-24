@@ -1,30 +1,34 @@
 package kr.hhplus.be.server.controller.order;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import kr.hhplus.be.server.dto.ResponseDto;
 import kr.hhplus.be.server.dto.order.OrderRequestDto;
-import kr.hhplus.be.server.mock.FakeData;
+import kr.hhplus.be.server.service.order.OrderFacade;
+import kr.hhplus.be.server.service.order.OrderService;
 
 @RestController
 @RequestMapping("/orders")
 @Tag(name = "주문 API", description = "상품 주문 관련 API")
 public class OrderController {
 
-    private final FakeData fakeData;
+    private final OrderFacade orderFacade;
 
     @Autowired
-    public OrderController(FakeData fakeData) {
-        this.fakeData = fakeData;
+    public OrderController(OrderFacade orderFacade) {
+        this.orderFacade = orderFacade;
     }
 
     @PostMapping
@@ -50,6 +54,13 @@ public class OrderController {
     )
     public ResponseEntity<ResponseDto> orderPoroduct(@RequestBody OrderRequestDto orderRequestDto) {
         ResponseDto res = new ResponseDto();
+        try {
+        	orderFacade.order(orderRequestDto);
+        }catch(Exception e) {
+        	res.setCode(500);
+        	res.setMessage(e.getMessage());
+        	ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+        }
         return ResponseEntity.ok(res);
     }
 }
