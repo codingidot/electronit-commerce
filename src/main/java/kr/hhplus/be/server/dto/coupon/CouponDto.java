@@ -1,17 +1,23 @@
 package kr.hhplus.be.server.dto.coupon;
 
+import java.math.BigDecimal;
+
 public class CouponDto {
 
 	private Long couponId;
     private String couponName;
     private String couponType;
+    private BigDecimal couponValue;
     private boolean issueSuccess;
+    private int count;
     
-	public CouponDto(Long couponId, String couponName, String couponType, boolean issueSuccess) {
+	public CouponDto(Long couponId, String couponName, String couponType, BigDecimal couponValue, boolean issueSuccess, int count) {
 		this.couponId = couponId;
 		this.couponName = couponName;
 		this.couponType = couponType;
+		this.couponValue = couponValue; 
 		this.issueSuccess = issueSuccess;
+		this.count = count;
 	}
 
 	public Long getCouponId() {
@@ -26,7 +32,15 @@ public class CouponDto {
 		return couponType;
 	}
 
+	public BigDecimal getCouponValue() {
+		return couponValue;
+	}
+
 	public boolean isIssueSuccess() {
 		return issueSuccess;
+	}
+	
+	public int getCount() {
+		return count;
 	}
 }

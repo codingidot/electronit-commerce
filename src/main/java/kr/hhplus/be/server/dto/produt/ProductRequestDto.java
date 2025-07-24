@@ -1,14 +1,19 @@
 package kr.hhplus.be.server.dto.produt;
 
-import java.math.BigDecimal;
 
 public class ProductRequestDto {
 
     private Long goodsId;
     private String goodsName;
     private String goodsType;
+    
+    public ProductRequestDto(Long goodsId, String goodsName, String goodsType) {
+		this.goodsId = goodsId;
+		this.goodsName = goodsName;
+		this.goodsType = goodsType;
+	}
 
-    public Long getGoodsId() {
+	public Long getGoodsId() {
         return goodsId;
     }
 
