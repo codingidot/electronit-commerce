@@ -21,4 +21,8 @@ public class ProductService {
 		return productRepository.findAll(requestDto);
 	}
 
+	public void updateProduct(ProductDto productDto) {
+		productRepository.save(productDto);
+	}
+
 }

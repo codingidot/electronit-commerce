@@ -7,4 +7,5 @@ import kr.hhplus.be.server.dto.produt.ProductRequestDto;
 
 public interface ProductRepository {
 	List<ProductDto> findAll(ProductRequestDto param);
+	void save(ProductDto productDto);
 }

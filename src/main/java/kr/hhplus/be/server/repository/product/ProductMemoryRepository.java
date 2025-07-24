@@ -1,7 +1,5 @@
 package kr.hhplus.be.server.repository.product;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +31,12 @@ public class ProductMemoryRepository implements ProductRepository{
 															  .filter(product -> param.getGoodsType() == null || product.getGoodsType().equals(param.getGoodsType()))
 															  .collect(Collectors.toList());
 		return list;
+	}
+
+	//상품정보 update
+	@Override
+	public void save(ProductDto productDto) {
+		productTable.put(productDto.getGoodsId(), productDto);
 	}
 	
 	//

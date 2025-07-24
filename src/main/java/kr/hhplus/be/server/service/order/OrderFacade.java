@@ -64,6 +64,12 @@ public class OrderFacade {
 		BigDecimal unitPrice = list.get(0).getPrice();
 		BigDecimal totalPrice = unitPrice.multiply(BigDecimal.valueOf(buyCnt));
 		
+
+		//재고차감
+		String productName = list.get(0).getGoodsName();
+		productService.updateProduct(new ProductDto(goodsId,productName ,unitPrice,stock - buyCnt, list.get(0).getGoodsType(), list.get(0).getRepreGoodsId()));
+		
+		
 		//쿠폰체크
 		if(coupon.isPresent()) {
 			CouponDto couponInfo = coupon.get();
