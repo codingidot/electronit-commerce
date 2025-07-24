@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.dto.ResponseDto;
 import kr.hhplus.be.server.dto.coupon.CouponIssueRequestDto;
 import kr.hhplus.be.server.mock.FakeData;
+import kr.hhplus.be.server.service.coupon.CouponService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +22,11 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Coupon", description = "쿠폰 관련 API")
 public class CouponController {
 
-    private final FakeData fakeData;
+    private final CouponService couponService;
 
     @Autowired
-    public CouponController(FakeData fakeData) {
-        this.fakeData = fakeData;
+    public CouponController(CouponService couponService) {
+        this.couponService = couponService;
     }
 
     @PostMapping("/issue")
@@ -51,7 +53,7 @@ public class CouponController {
 
         ResponseDto res = new ResponseDto();
         try {
-            res.setData(fakeData.issueCoupon(requestDto));
+        	couponService.issueCoupon(requestDto);
         } catch (Exception e) {
             e.printStackTrace();
             res.setCode(500);
