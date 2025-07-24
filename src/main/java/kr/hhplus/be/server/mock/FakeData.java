@@ -35,6 +35,6 @@ public class FakeData {
     }
     
     public CouponDto issueCoupon(CouponIssueRequestDto dto) {
-    	return new CouponDto(dto.getCouponId(), "가입쿠폰", "PERCENT", true);
+    	return new CouponDto(dto.getCouponId(), "가입쿠폰", "PERCENT", new BigDecimal(30), true);
     }
 }

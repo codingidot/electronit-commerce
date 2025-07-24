@@ -2,7 +2,8 @@ package kr.hhplus.be.server.dto.order;
 
 public class OrderRequestDto {
 
-	Long GoodsId;
+	Long userId;
+	Long goodsId;
 	int count;
 	private Long couponId;
 	
@@ -10,14 +11,18 @@ public class OrderRequestDto {
 		
 	}
 	
-	public OrderRequestDto(Long goodsId, int count, Long couponId) {
-		GoodsId = goodsId;
+	public OrderRequestDto(Long userId ,Long goodsId, int count, Long couponId) {
+		this.userId = userId;
+		this.goodsId = goodsId;
 		this.count = count;
 		this.couponId = couponId;
 	}
 	
+	public Long getUserId() {
+		return userId;
+	}
 	public Long getGoodsId() {
-		return GoodsId;
+		return goodsId;
 	}
 	public int getCount() {
 		return count;

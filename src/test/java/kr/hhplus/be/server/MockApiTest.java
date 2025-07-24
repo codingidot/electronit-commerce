@@ -82,7 +82,7 @@ public class MockApiTest {
         CouponIssueRequestDto requestDto = new CouponIssueRequestDto(1L, 100L);
         String json = new ObjectMapper().writeValueAsString(requestDto);
 
-        CouponDto couponDto = new CouponDto(100L, "가입쿠폰", "PERCENT", true);
+        CouponDto couponDto = new CouponDto(100L, "가입쿠폰", "PERCENT",new BigDecimal(3000), true);
         Mockito.when(fakeData.issueCoupon(Mockito.any(CouponIssueRequestDto.class))).thenReturn(couponDto);
 
         // when & then

@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.dto.produt;
 
-import java.math.BigDecimal;
 
 public class ProductRequestDto {
 
