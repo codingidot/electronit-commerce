@@ -35,7 +35,7 @@ public class ProductMemoryRepository implements ProductRepository{
 
 	//상품정보 update
 	@Override
-	public void save(ProductDto productDto) {
+	public void save(Product productDto) {
 		productTable.put(productDto.getGoodsId(), productDto);
 	}
 	
