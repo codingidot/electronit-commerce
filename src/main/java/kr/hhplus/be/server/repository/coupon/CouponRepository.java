@@ -2,9 +2,16 @@ package kr.hhplus.be.server.repository.coupon;
 
 import java.util.Optional;
 
-import kr.hhplus.be.server.dto.coupon.CouponDto;
+import kr.hhplus.be.server.dto.coupon.Coupon;
+import kr.hhplus.be.server.dto.coupon.CouponIssueDto;
 
 public interface CouponRepository {
 
-	public Optional<CouponDto> getCoupon(Long couponId);
+	public Optional<Coupon> getCoupon(Long couponId);
+
+	public int getIssueData(Long couponId);
+
+	public void issueSave(CouponIssueDto issueDto);
+	
+	public Long getCouponIssueSeq();
 }

@@ -11,8 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import kr.hhplus.be.server.dto.produt.ProductDto;
-import kr.hhplus.be.server.dto.produt.ProductRequestDto;
+import kr.hhplus.be.server.dto.product.Product;
+import kr.hhplus.be.server.dto.product.ProductRequestDto;
 import kr.hhplus.be.server.repository.product.ProductMemoryRepository;
 import kr.hhplus.be.server.service.product.ProductService;
 
@@ -23,11 +23,11 @@ public class UnitTest {
 	
 	@BeforeEach
 	public void testSetting() {
-		List<ProductDto> productList = new ArrayList<>();
-		productList.add(new ProductDto(1L, "상품A", new BigDecimal("19900"), 50, "N", null));
-        productList.add(new ProductDto(2L, "상품B", new BigDecimal("29900"), 30, "N", null));
-        productList.add(new ProductDto(3L, "상품C", new BigDecimal("15900"), 100, "O", 4L));
-        productList.add(new ProductDto(4L, "상품D", new BigDecimal("45900"), 10, "R", null));
+		List<Product> productList = new ArrayList<>();
+		productList.add(new Product(1L, "상품A", new BigDecimal("19900"), 50, "N", null));
+        productList.add(new Product(2L, "상품B", new BigDecimal("29900"), 30, "N", null));
+        productList.add(new Product(3L, "상품C", new BigDecimal("15900"), 100, "O", 4L));
+        productList.add(new Product(4L, "상품D", new BigDecimal("45900"), 10, "R", null));
         
 		productRepository = new ProductMemoryRepository(productList);
 		productService = new ProductService(productRepository);
@@ -43,10 +43,10 @@ public class UnitTest {
 		ProductRequestDto param3 = new ProductRequestDto(null, null, "N");//상품타입 검색
 		ProductRequestDto param4 = new ProductRequestDto(4L, "D", "R");//종합검색
 				
-		List<ProductDto> list1 = productService.getProductList(param1);
-		List<ProductDto> list2 = productService.getProductList(param2);
-		List<ProductDto> list3 = productService.getProductList(param3);
-		List<ProductDto> list4 = productService.getProductList(param4);
+		List<Product> list1 = productService.getProductList(param1);
+		List<Product> list2 = productService.getProductList(param2);
+		List<Product> list3 = productService.getProductList(param3);
+		List<Product> list4 = productService.getProductList(param4);
 		
 		//아이디 검색 검증
 		Assertions.assertThat(list1)

@@ -1,8 +1,8 @@
-package kr.hhplus.be.server.dto.produt;
+package kr.hhplus.be.server.dto.product;
 
 import java.math.BigDecimal;
 
-public class ProductDto {
+public class Product {
 
     private Long goodsId;
     private String goodsName;
@@ -11,7 +11,7 @@ public class ProductDto {
     private String goodsType;
     private Long repreGoodsId;
 
-    public ProductDto(Long goodsId, String goodsName, BigDecimal price, Integer stock, String goodsType, Long repreGoodsId) {
+    public Product(Long goodsId, String goodsName, BigDecimal price, Integer stock, String goodsType, Long repreGoodsId) {
         this.goodsId = goodsId;
         this.goodsName = goodsName;
         this.price = price;

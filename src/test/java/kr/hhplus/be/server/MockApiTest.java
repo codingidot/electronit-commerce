@@ -21,11 +21,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kr.hhplus.be.server.dto.coupon.CouponDto;
+import kr.hhplus.be.server.dto.coupon.Coupon;
 import kr.hhplus.be.server.dto.coupon.CouponIssueRequestDto;
 import kr.hhplus.be.server.dto.order.OrderRequestDto;
-import kr.hhplus.be.server.dto.produt.ProductDto;
-import kr.hhplus.be.server.dto.user.UserDto;
+import kr.hhplus.be.server.dto.product.Product;
+import kr.hhplus.be.server.dto.user.User;
 import kr.hhplus.be.server.mock.FakeData;
 
 @WebMvcTest
@@ -41,9 +41,9 @@ public class MockApiTest {
     @DisplayName("상품조회 mock api 테스트")
     void getProductInfoTest() throws Exception {
         // given
-        List<ProductDto> productList = Arrays.asList(
-                new ProductDto(1L, "상품1", new BigDecimal("1000.00"), 10, "TYPE_A", null),
-                new ProductDto(2L, "상품2", new BigDecimal("2000.00"), 5, "TYPE_B", 1L)
+        List<Product> productList = Arrays.asList(
+                new Product(1L, "상품1", new BigDecimal("1000.00"), 10, "TYPE_A", null),
+                new Product(2L, "상품2", new BigDecimal("2000.00"), 5, "TYPE_B", 1L)
         );
 
         Mockito.when(fakeData.getProductList()).thenReturn(productList);
@@ -62,7 +62,7 @@ public class MockApiTest {
     void getBalanceInfoTest() throws Exception {
     	// given
         Long userId = 1L;
-        UserDto bal = new UserDto(userId,  "홍길동", new BigDecimal("5000.00"));
+        User bal = new User(userId,  "홍길동", new BigDecimal("5000.00"));
 
         Mockito.when(fakeData.getBalanceInfo(userId)).thenReturn(bal);
 
@@ -82,7 +82,7 @@ public class MockApiTest {
         CouponIssueRequestDto requestDto = new CouponIssueRequestDto(1L, 100L);
         String json = new ObjectMapper().writeValueAsString(requestDto);
 
-        CouponDto couponDto = new CouponDto(100L, "가입쿠폰", "PERCENT",new BigDecimal(3000), true);
+        Coupon couponDto = new Coupon(100L, "가입쿠폰", "PERCENT",new BigDecimal(3000), true,10);
         Mockito.when(fakeData.issueCoupon(Mockito.any(CouponIssueRequestDto.class))).thenReturn(couponDto);
 
         // when & then

@@ -1,18 +1,15 @@
 package kr.hhplus.be.server.service.order;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import kr.hhplus.be.server.dto.coupon.CouponDto;
-import kr.hhplus.be.server.dto.order.OrderDto;
+import kr.hhplus.be.server.dto.coupon.Coupon;
 import kr.hhplus.be.server.dto.order.OrderRequestDto;
-import kr.hhplus.be.server.dto.produt.ProductDto;
-import kr.hhplus.be.server.dto.produt.ProductRequestDto;
-import kr.hhplus.be.server.dto.user.UserDto;
-import kr.hhplus.be.server.repository.user.UserRepository;
+import kr.hhplus.be.server.dto.product.Product;
+import kr.hhplus.be.server.dto.user.User;
 import kr.hhplus.be.server.service.coupon.CouponService;
 import kr.hhplus.be.server.service.product.ProductService;
 import kr.hhplus.be.server.service.user.UserService;
@@ -24,82 +21,42 @@ public class OrderFacade {
 	private final UserService userService;
 	private final CouponService couponService;
 	private final OrderService orderService;
-	private final UserRepository userRepository;
 	
-	OrderFacade(ProductService productService,UserService userService, CouponService couponService, OrderService orderService,UserRepository userRepository){
+	OrderFacade(ProductService productService,UserService userService, CouponService couponService, OrderService orderService){
 		this.productService = productService;
 		this.userService = userService;
 		this.couponService = couponService;
 		this.orderService = orderService;
-		this.userRepository = userRepository;
 	}
 	
+	@Transactional(rollbackFor = Exception.class)
 	public void order(OrderRequestDto request) throws Exception {
 		//상품정보
 		Long goodsId = request.getGoodsId();
-		ProductRequestDto param = new ProductRequestDto(goodsId, null, null);
-		List<ProductDto> list = productService.getProductList(param);
-		
+		Product buyProduct = productService.getOrderProductInfo(goodsId);
+	
 		//유저정보
-		UserDto userInfo = userService.getBalanceInfo(request.getUserId());
-		BigDecimal balance = userInfo.getBalance();
+		User userInfo = userService.getUserInfo(request.getUserId());
 		
 		//쿠폰정보
 		Long couponId = request.getCouponId();
-		Optional<CouponDto> coupon = couponService.getCoupon(couponId);
-		
-		//유저체크
-		if(list.size() == 0) {
-			throw new Exception("해당 상품은 존재하지 않습니다.");
-		}
-
-		//재고체크
-		int stock = list.get(0).getStock();
-		int buyCnt = request.getCount();
-		if(buyCnt > stock) {
-			throw new Exception("재고가 부족합니다.");
-		}
+		Optional<Coupon> coupon = couponService.getCoupon(couponId);
 		
 		//가격정보
-		BigDecimal unitPrice = list.get(0).getPrice();
+		BigDecimal unitPrice = buyProduct.getPrice();
+		int buyCnt = request.getCount();
 		BigDecimal totalPrice = unitPrice.multiply(BigDecimal.valueOf(buyCnt));
-		
 
-		//재고차감
-		String productName = list.get(0).getGoodsName();
-		productService.updateProduct(new ProductDto(goodsId,productName ,unitPrice,stock - buyCnt, list.get(0).getGoodsType(), list.get(0).getRepreGoodsId()));
-		
-		
-		//쿠폰체크
+		//쿠폰 디스카운트 적용
 		if(coupon.isPresent()) {
-			CouponDto couponInfo = coupon.get();
-			String couponType = couponInfo.getCouponType();// PERCENT : 전체에서 퍼센트 할인, DEDUCT : 금액 차감
-			BigDecimal couponVal = couponInfo.getCouponValue();
-			//쿠폰금액 차감
-			if("PERCENT".equals(couponType)) {//퍼센트 할인
-				BigDecimal discountRate = couponVal.divide(BigDecimal.valueOf(100));
-			    BigDecimal discountAmount = totalPrice.multiply(discountRate);
-			    totalPrice = totalPrice.subtract(discountAmount);
-			}else if("DEDUCT".equals(couponType)) {//일정 금액 할인
-				totalPrice = totalPrice.subtract(couponVal);
-				if(totalPrice.compareTo(BigDecimal.ZERO) < 0) {
-					throw new Exception("쿠폰 할인 금액이 주문 금액보다 크면 안됩니다.");
-				}
-			}
-		}
-		
-		//잔액체크
-		if(balance.compareTo(totalPrice)<0) {
-			throw new Exception("잔액이 부족합니다.");
+			Coupon couponInfo = coupon.get();
+			totalPrice =  couponService.applyDiscount(couponInfo, unitPrice, buyCnt);
 		}
 
-		//주문 테이블에 insert
-		Long orderNewId = orderService.getOrderSeq();
-		orderService.insertOrder(new OrderDto(orderNewId, goodsId,couponId, request.getUserId(),unitPrice.multiply(BigDecimal.valueOf(buyCnt))
-											  , totalPrice , buyCnt, "10"));
+		orderService.createOrder(userInfo, buyProduct, buyCnt, totalPrice, couponId);
 		
 		//유저 잔액 차감
-		userRepository.save(new UserDto(userInfo.getUserId(), userInfo.getUserName(), userInfo.getBalance().subtract(totalPrice)));
+		userService.updateUser(new User(userInfo.getUserId(), userInfo.getUserName(), userInfo.getBalance().subtract(totalPrice)));
 		
 	}
 }

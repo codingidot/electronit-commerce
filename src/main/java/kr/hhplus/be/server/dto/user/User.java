@@ -2,13 +2,13 @@ package kr.hhplus.be.server.dto.user;
 
 import java.math.BigDecimal;
 
-public class UserDto {
+public class User {
 
 	private Long userId;
     private String userName;
     private BigDecimal balance;
     
-    public UserDto(Long userId, String userName, BigDecimal balance){
+    public User(Long userId, String userName, BigDecimal balance){
     	this.userId = userId;
     	this.userName = userName;
     	this.balance = balance;

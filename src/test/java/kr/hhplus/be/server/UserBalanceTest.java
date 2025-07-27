@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import kr.hhplus.be.server.dto.user.ChargeRequestDto;
-import kr.hhplus.be.server.dto.user.UserDto;
+import kr.hhplus.be.server.dto.user.User;
 import kr.hhplus.be.server.repository.user.UserRepository;
 import kr.hhplus.be.server.service.user.UserService;
 
@@ -30,11 +30,11 @@ public class UserBalanceTest {
 	@InjectMocks
 	UserService userService;
 	
-	private UserDto testUser;
+	private User testUser;
 	
 	@BeforeEach
 	void setup() {
-		testUser = new UserDto(1L, "testUser", new BigDecimal(1000));
+		testUser = new User(1L, "testUser", new BigDecimal(1000));
 	}
 	
 	@Test
@@ -48,7 +48,7 @@ public class UserBalanceTest {
 		when(userRepository.findById(id)).thenReturn(Optional.ofNullable(testUser));
 
 		//when
-		UserDto result = userService.chargeBalance(chargeRequest);
+		User result = userService.chargeBalance(chargeRequest);
 		
 		//then
 		assertNotEquals(result.getBalance(), testUser.getBalance().add(chargeAmount));
@@ -112,7 +112,7 @@ public class UserBalanceTest {
 		when(userRepository.findById(id)).thenReturn(Optional.ofNullable(testUser));
 		
 		//when
-		UserDto result = userService.getBalanceInfo(id);
+		User result = userService.getUserInfo(id);
 		
 		//then
 		assertEquals(testUser.getBalance(), result.getBalance());
@@ -126,7 +126,7 @@ public class UserBalanceTest {
 		when(userRepository.findById(id)).thenReturn(Optional.empty());
 		
 		//when
-		Exception exception = assertThrows(Exception.class, ()-> userService.getBalanceInfo(id));
+		Exception exception = assertThrows(Exception.class, ()-> userService.getUserInfo(id));
 		
 		//then
 		assertEquals("사용자를 찾을 수 없습니다.", exception.getMessage());

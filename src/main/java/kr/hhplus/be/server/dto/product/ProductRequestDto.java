@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.dto.produt;
+package kr.hhplus.be.server.dto.product;
 
 
 public class ProductRequestDto {

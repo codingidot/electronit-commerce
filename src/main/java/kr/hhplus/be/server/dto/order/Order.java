@@ -2,7 +2,7 @@ package kr.hhplus.be.server.dto.order;
 
 import java.math.BigDecimal;
 
-public class OrderDto {
+public class Order {
 
 	Long orderId;
 	Long goodsId; 
@@ -13,7 +13,7 @@ public class OrderDto {
 	int count; 
 	String orderState;
 	
-	public OrderDto(Long orderId, Long goodsId, Long couponId, Long userId, BigDecimal orderPrice, BigDecimal payPrice,
+	public Order(Long orderId, Long goodsId, Long couponId, Long userId, BigDecimal orderPrice, BigDecimal payPrice,
 			int count, String orderState) {
 		this.orderId = orderId;
 		this.goodsId = goodsId;
