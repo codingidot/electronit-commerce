@@ -4,18 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import kr.hhplus.be.server.dto.coupon.CouponDto;
+import kr.hhplus.be.server.dto.coupon.Coupon;
 import kr.hhplus.be.server.dto.coupon.CouponIssueDto;
 
 public class CouponMemoryRepository implements CouponRepository{
 
-	private Map<Long, CouponDto> couponTable = new HashMap<>();
+	private Map<Long, Coupon> couponTable = new HashMap<>();
 	private Map<Long, CouponIssueDto> issueTable = new HashMap<>();
 	private Long couponSeq = 1L;
 	private Long couponIssueSeq = 1L;
 	
 	@Override
-	public Optional<CouponDto> getCoupon(Long couponId) {
+	public Optional<Coupon> getCoupon(Long couponId) {
 		
 		return Optional.ofNullable(couponTable.get(couponId));
 	}

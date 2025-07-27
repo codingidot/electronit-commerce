@@ -18,7 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import kr.hhplus.be.server.dto.coupon.CouponDto;
+import kr.hhplus.be.server.dto.coupon.Coupon;
 import kr.hhplus.be.server.dto.coupon.CouponIssueRequestDto;
 import kr.hhplus.be.server.repository.coupon.CouponRepository;
 import kr.hhplus.be.server.service.coupon.CouponService;
@@ -40,7 +40,7 @@ public class CouponIssueTest {
 	        Long userId = 100L;
 	        CouponIssueRequestDto requestDto = new CouponIssueRequestDto(couponId, userId);
 
-	        CouponDto coupon = new CouponDto(couponId, "할인쿠폰", "PERCENT", new BigDecimal("10"), true, 5);
+	        Coupon coupon = new Coupon(couponId, "할인쿠폰", "PERCENT", new BigDecimal("10"), true, 5);
 	        
 	        when(couponRepository.getIssueData(couponId)).thenReturn(3); 
 	        when(couponRepository.getCoupon(couponId)).thenReturn(Optional.of(coupon));
@@ -80,7 +80,7 @@ public class CouponIssueTest {
 	        Long userId = 100L;
 	        CouponIssueRequestDto requestDto = new CouponIssueRequestDto(couponId, userId);
 
-	        CouponDto coupon = new CouponDto(couponId, "할인쿠폰", "PERCENT", new BigDecimal("10"), true,3);
+	        Coupon coupon = new Coupon(couponId, "할인쿠폰", "PERCENT", new BigDecimal("10"), true,3);
 
 	        when(couponRepository.getCoupon(couponId)).thenReturn(Optional.of(coupon));
 	        when(couponRepository.getIssueData(couponId)).thenReturn(3); // 이미 3명 발급됨 (마감)

@@ -3,15 +3,15 @@ package kr.hhplus.be.server.repository.order;
 import java.util.HashMap;
 import java.util.Map;
 
-import kr.hhplus.be.server.dto.order.OrderDto;
+import kr.hhplus.be.server.dto.order.Order;
 
 public class OrderMemoryRepository implements OrderRepository{
 
-	public Map<Long, OrderDto> orderTable = new HashMap<>();
+	public Map<Long, Order> orderTable = new HashMap<>();
 	public Long orderSequence = 1L;
 	
 	@Override
-	public void insertOrderInfo(OrderDto order) {
+	public void insertOrderInfo(Order order) {
 		orderTable.put(order.getOrderId(), order);
 	}
 	

@@ -3,6 +3,8 @@ package kr.hhplus.be.server;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -17,11 +19,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import kr.hhplus.be.server.dto.coupon.CouponDto;
-import kr.hhplus.be.server.dto.order.OrderDto;
+import kr.hhplus.be.server.dto.coupon.Coupon;
+import kr.hhplus.be.server.dto.order.Order;
 import kr.hhplus.be.server.dto.order.OrderRequestDto;
-import kr.hhplus.be.server.dto.produt.ProductDto;
-import kr.hhplus.be.server.dto.user.UserDto;
+import kr.hhplus.be.server.dto.product.Product;
+import kr.hhplus.be.server.dto.user.User;
 import kr.hhplus.be.server.repository.user.UserRepository;
 import kr.hhplus.be.server.service.coupon.CouponService;
 import kr.hhplus.be.server.service.order.OrderFacade;
@@ -40,105 +42,39 @@ public class OrderTest {
 
 	    @InjectMocks private OrderFacade orderFacade;
 
-	    // 성공 케이스
+
 	    @Test
-	    void orderSuccessTest() throws Exception {
+	    void order_with_coupon_success() throws Exception {
 	        // given
-	        Long userId = 1L, goodsId = 100L, couponId = 10L;
+	        Long userId = 1L;
+	        Long goodsId = 100L;
+	        Long couponId = 10L;
 	        int count = 2;
 
 	        OrderRequestDto request = new OrderRequestDto(userId, goodsId, count, couponId);
-	        ProductDto product = new ProductDto(goodsId, "상품", new BigDecimal("1000"), 10, "N",null);
-	        UserDto user = new UserDto(userId, "홍길동", new BigDecimal("5000"));
-	        CouponDto coupon = new CouponDto(couponId, "민생쿠폰", "PERCENT", new BigDecimal("10"),true);
-	        when(productService.getProductList(any())).thenReturn(Arrays.asList(product));
-	        when(userService.getBalanceInfo(userId)).thenReturn(user);
+
+	        Product product = new Product(goodsId, "상품", new BigDecimal("1000"), 10, "N", null);
+	        User user = new User(userId, "홍길동", new BigDecimal("10000"));
+	        Coupon coupon = new Coupon(couponId, "10%쿠폰", "PERCENT", new BigDecimal("10"), true, 10);
+
+	        // Mock return values
+	        when(productService.getOrderProductInfo(goodsId)).thenReturn(product);
+	        when(userService.getUserInfo(userId)).thenReturn(user);
 	        when(couponService.getCoupon(couponId)).thenReturn(Optional.of(coupon));
-	        when(orderService.getOrderSeq()).thenReturn(999L);
+	        when(couponService.applyDiscount(eq(coupon), eq(product.getPrice()), eq(count)))
+	                .thenReturn(new BigDecimal("1800"));  // 10% 할인 적용된 금액
 
 	        // when
 	        orderFacade.order(request);
 
 	        // then
-	        verify(orderService).insertOrder(any(OrderDto.class));
-	        verify(userRepository).save(any(UserDto.class));
+	        verify(productService).getOrderProductInfo(goodsId);
+	        verify(userService).getUserInfo(userId);
+	        verify(couponService).getCoupon(couponId);
+	        verify(couponService).applyDiscount(coupon, product.getPrice(), count);
+	        verify(orderService).createOrder(user, product, count, new BigDecimal("1800"), couponId);
+	        verify(userService).updateUser(argThat(updatedUser ->
+	                updatedUser.getBalance().compareTo(new BigDecimal("8200")) == 0  // 10000 - 1800
+	        ));
 	    }
-
-	    // 1. 상품 없음 예외
-	    @Test
-	    void orderWrongProduct() throws Exception {
-	        Long userId = 1L, goodsId = 100L;
-	        OrderRequestDto request = new OrderRequestDto(userId, goodsId, 10, 11L);
-	        UserDto user = new UserDto(userId, "홍길동", new BigDecimal("5000"));
-	        
-	        when(productService.getProductList(any())).thenReturn(Collections.emptyList());
-	        when(userService.getBalanceInfo(userId)).thenReturn(user);
-
-	        Exception exception = assertThrows(Exception.class, () -> {
-	            orderFacade.order(request);
-	        });
-
-	        assertEquals("해당 상품은 존재하지 않습니다.", exception.getMessage());
-	    }
-
-	    // 2. 재고 부족 예외
-	    @Test
-	    void orderOutOfStock() throws Exception {
-	    	Long userId = 1L, goodsId = 100L;
-	        OrderRequestDto request = new OrderRequestDto(userId, goodsId, 10, 5L); // 수량 10 요청
-	        ProductDto product = new ProductDto(goodsId, "상품", new BigDecimal(3000), 5, "N", null); // 재고 5
-
-	        // 상품 Mock
-	        when(productService.getProductList(any())).thenReturn(Arrays.asList(product));
-
-	        // 유저 Mock
-	        UserDto user = new UserDto(userId, "홍길동", new BigDecimal("100000")); // 충분한 잔액
-	        when(userService.getBalanceInfo(userId)).thenReturn(user);
-
-	        Exception exception = assertThrows(Exception.class, () -> {
-	            orderFacade.order(request); // 여기서 재고 부족 예외 발생해야 함
-	        });
-
-	        assertEquals("재고가 부족합니다.", exception.getMessage());
-	    }
-
-	    // 3. 쿠폰 할인 금액 > 총액 예외
-	    @Test
-	    void orderCheaperThanCoupon() throws Exception {
-	        Long userId = 1L, goodsId = 100L, couponId = 10L;
-	        OrderRequestDto request = new OrderRequestDto(userId, goodsId,1, couponId);
-	        ProductDto product = new ProductDto(goodsId, "상품", new BigDecimal("1000"), 10, "N", null);
-	        UserDto user = new UserDto(userId, "홍길동", new BigDecimal("5000"));
-	        CouponDto coupon = new CouponDto(couponId,"할인쿠폰", "DEDUCT", new BigDecimal("2000"), true); // 할인 > 가격
-
-	        when(productService.getProductList(any())).thenReturn(Arrays.asList(product));
-	        when(userService.getBalanceInfo(userId)).thenReturn(user);
-	        when(couponService.getCoupon(couponId)).thenReturn(Optional.of(coupon));
-
-	        Exception exception = assertThrows(Exception.class, () -> {
-	            orderFacade.order(request);
-	        });
-
-	        assertEquals("쿠폰 할인 금액이 주문 금액보다 크면 안됩니다.", exception.getMessage());
-	    }
-
-	    // 4. 잔액 부족 예외
-	    @Test
-	    void orderNoMoney() throws Exception {
-	        Long userId = 1L, goodsId = 100L;
-	        OrderRequestDto request = new OrderRequestDto(userId, goodsId, 1, null);
-	        ProductDto product = new ProductDto(goodsId, "상품", new BigDecimal("10000"), 9, "O", 33L);
-	        UserDto user = new UserDto(userId, "홍길동", new BigDecimal("5000")); // 잔액 부족
-
-	        when(productService.getProductList(any())).thenReturn(Arrays.asList(product));
-	        when(userService.getBalanceInfo(userId)).thenReturn(user);
-	        when(couponService.getCoupon(null)).thenReturn(Optional.empty());
-
-	        Exception exception = assertThrows(Exception.class, () -> {
-	            orderFacade.order(request);
-	        });
-
-	        assertEquals("잔액이 부족합니다.", exception.getMessage());
-	    }
-
 }

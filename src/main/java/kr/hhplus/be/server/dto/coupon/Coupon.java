@@ -2,7 +2,7 @@ package kr.hhplus.be.server.dto.coupon;
 
 import java.math.BigDecimal;
 
-public class CouponDto {
+public class Coupon {
 
 	private Long couponId;
     private String couponName;
@@ -11,7 +11,7 @@ public class CouponDto {
     private boolean issueSuccess;
     private int count;
     
-	public CouponDto(Long couponId, String couponName, String couponType, BigDecimal couponValue, boolean issueSuccess, int count) {
+	public Coupon(Long couponId, String couponName, String couponType, BigDecimal couponValue, boolean issueSuccess, int count) {
 		this.couponId = couponId;
 		this.couponName = couponName;
 		this.couponType = couponType;

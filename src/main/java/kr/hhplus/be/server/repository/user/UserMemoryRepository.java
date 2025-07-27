@@ -6,19 +6,19 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import kr.hhplus.be.server.dto.user.UserDto;
+import kr.hhplus.be.server.dto.user.User;
 
 @Repository
 public class UserMemoryRepository implements UserRepository{
-	public Map<Long, UserDto> userTable = new HashMap<>();
+	public Map<Long, User> userTable = new HashMap<>();
 	
 	@Override
-	public Optional<UserDto> findById(Long id){
+	public Optional<User> findById(Long id){
 		return Optional.ofNullable(userTable.get(id));
 	}
 
 	@Override
-	public void save(UserDto userDto) {
+	public void save(User userDto) {
 		Long id = userDto.getUserId();
 		userTable.put(id, userDto);
 	}
