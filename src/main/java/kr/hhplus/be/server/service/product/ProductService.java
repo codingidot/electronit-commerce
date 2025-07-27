@@ -26,7 +26,7 @@ public class ProductService {
 	public Product getOrderProductInfo(Long goodsId) throws Exception {
 		ProductRequestDto param = new ProductRequestDto(goodsId, null, null);
 		List<Product> list = this.getProductList(param);
-		System.out.println("sssdd  " + list.size());
+
 		if(list.size() == 0) {
 			throw new Exception("해당 상품은 존재하지 않습니다.");
 		}
