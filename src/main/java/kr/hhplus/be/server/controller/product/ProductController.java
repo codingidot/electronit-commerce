@@ -10,6 +10,7 @@ import kr.hhplus.be.server.dto.ResponseDto;
 import kr.hhplus.be.server.dto.produt.ProductDto;
 import kr.hhplus.be.server.dto.produt.ProductRequestDto;
 import kr.hhplus.be.server.mock.FakeData;
+import kr.hhplus.be.server.service.product.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,11 +24,11 @@ import java.util.List;
 @Tag(name = "상품 API", description = "상품 관련 API입니다.")
 public class ProductController {
 
-    private final FakeData fakeData;
+    private final ProductService productService;
 
     @Autowired
-    public ProductController(FakeData fakeData){
-        this.fakeData = fakeData;
+    public ProductController(ProductService productService){
+        this.productService = productService;
     }
 
     @GetMapping
@@ -45,7 +46,7 @@ public class ProductController {
         ResponseDto res = new ResponseDto();
 
         try {
-            List<ProductDto> list = fakeData.getProductList();
+            List<ProductDto> list = productService.getProductList(requestDto);
             res.setData(list);
         } catch(Exception e) {
             e.printStackTrace();

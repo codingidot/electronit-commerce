@@ -1,4 +1,13 @@
-package kr.hhplus.be.server.controller.balance;
+package kr.hhplus.be.server.controller.user;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -8,23 +17,19 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.dto.ResponseDto;
-import kr.hhplus.be.server.dto.balance.ChargeRequestDto;
-import kr.hhplus.be.server.mock.FakeData;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import kr.hhplus.be.server.dto.user.ChargeRequestDto;
+import kr.hhplus.be.server.service.user.UserService;
 
 @RestController
 @RequestMapping("/wallet")
 @Tag(name = "Balance", description = "잔액 관련 API")
-public class BalanceController {
+public class UserController {
 
-    private final FakeData fakeData;
+    private final UserService userService;
 
     @Autowired
-    public BalanceController(FakeData fakeData){
-        this.fakeData = fakeData;
+    public UserController(UserService userService){
+        this.userService = userService;
     }
 
     @GetMapping("/balance/{userId}")
@@ -41,11 +46,10 @@ public class BalanceController {
 
         ResponseDto res = new ResponseDto();
         try {
-            res.setData(fakeData.getBalanceInfo(userId));
+            res.setData(userService.getBalanceInfo(userId));
         } catch(Exception e) {
-            e.printStackTrace();
             res.setCode(500);
-            res.setMessage("잔액조회에 실패하였습니다.");
+            res.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
         }
         return ResponseEntity.ok(res);
@@ -75,9 +79,8 @@ public class BalanceController {
 
         ResponseDto res = new ResponseDto();
         try {
-            res.setData(fakeData.chargeBalance(chargeRequestDto));
+            res.setData(userService.chargeBalance(chargeRequestDto));
         } catch(Exception e) {
-            e.printStackTrace();
             res.setCode(500);
             res.setMessage("잔액충전에 실패하였습니다.");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);

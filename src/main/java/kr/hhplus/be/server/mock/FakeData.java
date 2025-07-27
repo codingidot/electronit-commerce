@@ -6,11 +6,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import kr.hhplus.be.server.dto.balance.BalanceDto;
-import kr.hhplus.be.server.dto.balance.ChargeRequestDto;
 import kr.hhplus.be.server.dto.coupon.CouponDto;
 import kr.hhplus.be.server.dto.coupon.CouponIssueRequestDto;
 import kr.hhplus.be.server.dto.produt.ProductDto;
+import kr.hhplus.be.server.dto.user.UserDto;
+import kr.hhplus.be.server.dto.user.ChargeRequestDto;
 
 @Component
 public class FakeData {
@@ -26,15 +26,15 @@ public class FakeData {
         return productList;
     }
     
-    public BalanceDto getBalanceInfo(Long userId) {
-    	return new BalanceDto(userId, "김철수", new BigDecimal("10000"));
+    public UserDto getBalanceInfo(Long userId) {
+    	return new UserDto(userId, "김철수", new BigDecimal("10000"));
     }
     
-    public BalanceDto chargeBalance(ChargeRequestDto dto) {
-    	return new BalanceDto(dto.getUserId(), "김철수", dto.getAmount().add(new BigDecimal("10000")));
+    public UserDto chargeBalance(ChargeRequestDto dto) {
+    	return new UserDto(dto.getUserId(), "김철수", dto.getAmount().add(new BigDecimal("10000")));
     }
     
     public CouponDto issueCoupon(CouponIssueRequestDto dto) {
-    	return new CouponDto(dto.getCouponId(), "가입쿠폰", "PERCENT", true);
+    	return new CouponDto(dto.getCouponId(), "가입쿠폰", "PERCENT", new BigDecimal(30), true);
     }
 }
