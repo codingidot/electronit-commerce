@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 
 import org.springframework.stereotype.Service;
 
-import kr.hhplus.be.server.dto.order.Order;
-import kr.hhplus.be.server.dto.product.Product;
-import kr.hhplus.be.server.dto.user.User;
+import kr.hhplus.be.server.domain.order.Order;
+import kr.hhplus.be.server.domain.product.Product;
+import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.repository.order.OrderRepository;
 
 @Service

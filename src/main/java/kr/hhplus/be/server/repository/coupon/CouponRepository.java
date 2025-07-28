@@ -2,7 +2,7 @@ package kr.hhplus.be.server.repository.coupon;
 
 import java.util.Optional;
 
-import kr.hhplus.be.server.dto.coupon.Coupon;
+import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.dto.coupon.CouponIssueDto;
 
 public interface CouponRepository {

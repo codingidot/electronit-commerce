@@ -2,7 +2,7 @@ package kr.hhplus.be.server.repository.product;
 
 import java.util.List;
 
-import kr.hhplus.be.server.dto.product.Product;
+import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.dto.product.ProductRequestDto;
 
 public interface ProductRepository {

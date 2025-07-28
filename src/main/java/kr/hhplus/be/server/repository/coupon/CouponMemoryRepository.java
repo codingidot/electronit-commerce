@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import kr.hhplus.be.server.dto.coupon.Coupon;
+import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.dto.coupon.CouponIssueDto;
 
 public class CouponMemoryRepository implements CouponRepository{

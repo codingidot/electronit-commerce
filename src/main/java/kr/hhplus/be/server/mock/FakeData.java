@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import kr.hhplus.be.server.dto.coupon.Coupon;
+import kr.hhplus.be.server.domain.coupon.Coupon;
+import kr.hhplus.be.server.domain.product.Product;
+import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.dto.coupon.CouponIssueRequestDto;
-import kr.hhplus.be.server.dto.product.Product;
-import kr.hhplus.be.server.dto.user.User;
 import kr.hhplus.be.server.dto.user.ChargeRequestDto;
 
 @Component

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import kr.hhplus.be.server.dto.product.Product;
+import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.dto.product.ProductRequestDto;
 import kr.hhplus.be.server.repository.product.ProductRepository;
 

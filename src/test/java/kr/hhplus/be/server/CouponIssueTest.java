@@ -18,7 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import kr.hhplus.be.server.dto.coupon.Coupon;
+import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.dto.coupon.CouponIssueRequestDto;
 import kr.hhplus.be.server.repository.coupon.CouponRepository;
 import kr.hhplus.be.server.service.coupon.CouponService;

@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import kr.hhplus.be.server.dto.user.User;
+import kr.hhplus.be.server.domain.user.User;
 
 @Repository
 public class UserMemoryRepository implements UserRepository{

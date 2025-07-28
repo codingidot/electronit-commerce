@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import kr.hhplus.be.server.dto.product.Product;
+import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.dto.product.ProductRequestDto;
 import kr.hhplus.be.server.repository.product.ProductMemoryRepository;
 import kr.hhplus.be.server.service.product.ProductService;

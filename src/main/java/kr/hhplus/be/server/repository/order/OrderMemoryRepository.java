@@ -3,7 +3,7 @@ package kr.hhplus.be.server.repository.order;
 import java.util.HashMap;
 import java.util.Map;
 
-import kr.hhplus.be.server.dto.order.Order;
+import kr.hhplus.be.server.domain.order.Order;
 
 public class OrderMemoryRepository implements OrderRepository{
 

@@ -19,11 +19,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import kr.hhplus.be.server.dto.coupon.Coupon;
-import kr.hhplus.be.server.dto.order.Order;
+import kr.hhplus.be.server.domain.coupon.Coupon;
+import kr.hhplus.be.server.domain.order.Order;
+import kr.hhplus.be.server.domain.product.Product;
+import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.dto.order.OrderRequestDto;
-import kr.hhplus.be.server.dto.product.Product;
-import kr.hhplus.be.server.dto.user.User;
 import kr.hhplus.be.server.repository.user.UserRepository;
 import kr.hhplus.be.server.service.coupon.CouponService;
 import kr.hhplus.be.server.service.order.OrderFacade;

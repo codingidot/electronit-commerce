@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import kr.hhplus.be.server.dto.product.Product;
+import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.dto.product.ProductRequestDto;
 
 public class ProductMemoryRepository implements ProductRepository{

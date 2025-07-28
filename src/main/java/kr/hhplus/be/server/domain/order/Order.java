@@ -1,9 +1,16 @@
-package kr.hhplus.be.server.dto.order;
+package kr.hhplus.be.server.domain.order;
 
 import java.math.BigDecimal;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+@Entity
 public class Order {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long orderId;
 	Long goodsId; 
 	Long couponId; 
