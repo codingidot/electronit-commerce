@@ -1,10 +1,18 @@
-package kr.hhplus.be.server.domain.order;
+package kr.hhplus.be.server.entity.order;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class Order {
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+@Entity
+public class OrderEntity {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long orderId;
 	Long goodsId; 
 	Long couponId; 
@@ -15,18 +23,8 @@ public class Order {
 	String orderState;
 	LocalDateTime orderDate;
 	
-	public Order(Long orderId, Long goodsId, Long couponId, Long userId, BigDecimal orderPrice, BigDecimal payPrice,
-			int count, String orderState, LocalDateTime orderDate) {
-		this.orderId = orderId;
-		this.goodsId = goodsId;
-		this.couponId = couponId;
-		this.userId = userId;
-		this.orderPrice = orderPrice;
-		this.payPrice = payPrice;
-		this.count = count;
-		this.orderState = orderState;
-		this.orderDate = orderDate;
-	}
+	OrderEntity(){};
+	
 	public Long getOrderId() {
 		return orderId;
 	}
@@ -51,6 +49,7 @@ public class Order {
 	public String getOrderState() {
 		return orderState;
 	}
+
 	public LocalDateTime getOrderDate() {
 		return orderDate;
 	}

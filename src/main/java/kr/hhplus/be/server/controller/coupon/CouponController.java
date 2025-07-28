@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.dto.ResponseDto;
 import kr.hhplus.be.server.dto.coupon.CouponIssueRequestDto;
-import kr.hhplus.be.server.mock.FakeData;
 import kr.hhplus.be.server.service.coupon.CouponService;
 
 import org.springframework.beans.factory.annotation.Autowired;
