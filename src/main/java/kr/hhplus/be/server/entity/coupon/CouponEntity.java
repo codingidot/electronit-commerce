@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import kr.hhplus.be.server.domain.coupon.Coupon;
 
 @Entity
 public class CouponEntity {
@@ -19,6 +20,10 @@ public class CouponEntity {
     private int count;
     
     CouponEntity(){};
+    
+    public Coupon toDomain(CouponEntity entity) {
+    	return new Coupon(entity.getCouponId(), entity.getCouponName(), entity.getCouponType(), entity.getCouponValue(), false, entity.getCount());
+    }
     
 	public Long getCouponId() {
 		return couponId;

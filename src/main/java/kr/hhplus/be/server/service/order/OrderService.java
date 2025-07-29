@@ -1,6 +1,8 @@
 package kr.hhplus.be.server.service.order;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.springframework.stereotype.Service;
 
@@ -47,7 +49,7 @@ public class OrderService {
 		//주문 테이블에 insert
 		Long orderNewId = this.getOrderSeq();
 		this.insertOrder(new Order(orderNewId, goodsId,couponId, userInfo.getUserId(),buyProduct.getPrice().multiply(BigDecimal.valueOf(count))
-											  , totalPrice , count, "10"));
+											  , totalPrice , count, "10", LocalDateTime.now(ZoneId.of("Asia/Seoul"))));
 	}
 
 }

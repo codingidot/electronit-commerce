@@ -38,7 +38,7 @@ public class CouponService {
 			throw new Exception("해당 쿠폰은 선착순 마감되었습니다.");
 		}
 		
-		Long issueId = couponRepository.getCouponIssueSeq();
+		Long issueId = null;
 		
 		couponRepository.issueSave(new CouponIssueDto(issueId,cp.getCouponId() , requestDto.getUserId(), "N"));
 	}
