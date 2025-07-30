@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import kr.hhplus.be.server.domain.order.Order;
 
 @Entity
 public class OrderEntity {
@@ -23,8 +24,25 @@ public class OrderEntity {
 	String orderState;
 	LocalDateTime orderDate;
 	
-	OrderEntity(){};
-	
+	protected OrderEntity(){};
+	private OrderEntity(Long orderId, Long goodsId, Long couponId, Long userId, BigDecimal orderPrice,
+			BigDecimal payPrice, int count, String orderState, LocalDateTime orderDate) {
+		this.orderId = orderId;
+		this.goodsId = goodsId;
+		this.couponId = couponId;
+		this.userId = userId;
+		this.orderPrice = orderPrice;
+		this.payPrice = payPrice;
+		this.count = count;
+		this.orderState = orderState;
+		this.orderDate = orderDate;
+	}
+
+	public static OrderEntity toEntity(Order order) {
+        OrderEntity entity = new OrderEntity(null, order.getGoodsId(), order.getCouponId(), order.getUserId(), order.getOrderPrice(),
+        						order.getPayPrice(), order.getCount(), order.getOrderState(), order.getOrderDate());
+        return entity;
+    }
 	public Long getOrderId() {
 		return orderId;
 	}
