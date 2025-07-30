@@ -19,7 +19,7 @@ public class CouponEntity {
     private BigDecimal couponValue;
     private int count;
     
-    CouponEntity(){};
+    protected CouponEntity(){};
     
     public Coupon toDomain(CouponEntity entity) {
     	return new Coupon(entity.getCouponId(), entity.getCouponName(), entity.getCouponType(), entity.getCouponValue(), false, entity.getCount());
