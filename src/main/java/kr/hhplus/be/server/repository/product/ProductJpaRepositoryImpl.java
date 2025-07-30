@@ -1,0 +1,46 @@
+package kr.hhplus.be.server.repository.product;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import kr.hhplus.be.server.domain.product.Product;
+import kr.hhplus.be.server.dto.product.ProductRequestDto;
+import kr.hhplus.be.server.entity.product.ProductEntity;
+
+public class ProductJpaRepositoryImpl implements ProductRepository{
+
+	ProductJpaRepository productRepository;
+	
+	@Override
+    public List<ProductEntity> findAll(ProductRequestDto param) {
+        Long goodsId = param.getGoodsId();
+        String name = param.getGoodsName();
+        String goodsType = param.getGoodsType();
+
+        List<ProductEntity> results = new ArrayList<>();
+
+        if (goodsId != null) {
+            // ID로 단건 조회 후 type 체크
+            Optional<ProductEntity> entity = productRepository.findById(goodsId);
+            if(entity.isPresent()) {
+            	results.add(entity.get());
+            }
+        } else if (name != null) {
+            results = productRepository.findByGoodsNameContaining(name);
+        } else if (goodsType != null) {
+            // type만 있을 때
+            results = productRepository.findByGoodsType(goodsType);
+        }
+
+        return results;
+    }
+
+
+	@Override
+	public void save(Product product) {
+		ProductEntity entity = ProductEntity.toEntity(product);
+		productRepository.save(entity);
+	}
+
+}

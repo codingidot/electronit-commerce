@@ -39,7 +39,7 @@ public class OrderEntity {
 	}
 
 	public static OrderEntity toEntity(Order order) {
-        OrderEntity entity = new OrderEntity(null, order.getGoodsId(), order.getCouponId(), order.getUserId(), order.getOrderPrice(),
+        OrderEntity entity = new OrderEntity(order.getOrderId(), order.getGoodsId(), order.getCouponId(), order.getUserId(), order.getOrderPrice(),
         						order.getPayPrice(), order.getCount(), order.getOrderState(), order.getOrderDate());
         return entity;
     }
