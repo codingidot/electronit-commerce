@@ -4,6 +4,7 @@ package kr.hhplus.be.server.service.user;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.hhplus.be.server.dto.user.ChargeRequestDto;
@@ -11,6 +12,7 @@ import kr.hhplus.be.server.dto.user.ChargeResponseDto;
 import kr.hhplus.be.server.entity.user.UserEntity;
 import kr.hhplus.be.server.repository.user.UserRepository;
 
+@Repository
 public class UserService {
 	
 	private final UserRepository userRepository;
