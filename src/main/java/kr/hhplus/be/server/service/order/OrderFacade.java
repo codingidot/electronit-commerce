@@ -38,8 +38,11 @@ public class OrderFacade {
 		ProductEntity buyProduct = productEntity.get();
 	
 		//쿠폰정보
-		Long couponId = (Long) request.getCouponId();
-		Optional<CouponEntity> coupon = couponService.getCoupon(couponId);
+		Long couponId = request.getCouponId();
+		Optional<CouponEntity> coupon = Optional.empty();
+		if (couponId != null) {
+		    coupon = couponService.getCoupon(couponId);
+		}
 		
 		//가격정보
 		BigDecimal unitPrice = buyProduct.getPrice();

@@ -16,7 +16,7 @@ public class UserEntity {
     private String userName;
     private BigDecimal balance;
     
-    protected UserEntity(){};
+    public UserEntity(){};
 
 	public Long getUserId() {
 		return userId;
@@ -43,4 +43,17 @@ public class UserEntity {
 		}
         this.balance = remain;
 	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public void setBalance(BigDecimal balance) {
+		this.balance = balance;
+	}
+	
 }

@@ -19,7 +19,7 @@ public class ProductEntity {
     private String goodsType;
     private Long repreGoodsId;
     
-    protected ProductEntity(){};
+    public ProductEntity(){};
 
 	public Long getGoodsId() {
 		return goodsId;
@@ -48,4 +48,29 @@ public class ProductEntity {
 	public void deductStock(int cnt) {
 		this.stock -= cnt;
 	}
+
+	public void setGoodsId(Long goodsId) {
+		this.goodsId = goodsId;
+	}
+
+	public void setGoodsName(String goodsName) {
+		this.goodsName = goodsName;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	}
+
+	public void setGoodsType(String goodsType) {
+		this.goodsType = goodsType;
+	}
+
+	public void setRepreGoodsId(Long repreGoodsId) {
+		this.repreGoodsId = repreGoodsId;
+	}
+	
 }
