@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
 import kr.hhplus.be.server.dto.product.ProductRequestDto;
 import kr.hhplus.be.server.entity.product.ProductEntity;
 
+@Repository
 public class ProductJpaRepositoryImpl implements ProductRepository{
 
 	ProductJpaRepository productRepository;
