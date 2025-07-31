@@ -24,4 +24,23 @@ public class ProductResponseDto {
         return new ProductResponseDto(product.getGoodsId(), product.getGoodsName(), product.getPrice(), product.getStock(), product.getGoodsType());
     }
 
+	public Long getGoodsId() {
+		return goodsId;
+	}
+
+	public String getGoodsName() {
+		return goodsName;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public Integer getStock() {
+		return stock;
+	}
+
+	public String getGoodsType() {
+		return goodsType;
+	}
 }
