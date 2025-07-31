@@ -1,9 +1,9 @@
 package kr.hhplus.be.server.repository.order;
 
-import kr.hhplus.be.server.domain.order.Order;
+import kr.hhplus.be.server.entity.order.OrderEntity;
 
 public interface OrderRepository {
 
-	void insertOrderInfo(Order orderDto);
+	void insertOrderInfo(OrderEntity order);
 	Long getOrderSeq();
 }

@@ -6,10 +6,10 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.hhplus.be.server.domain.coupon.Coupon;
-import kr.hhplus.be.server.domain.product.Product;
-import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.dto.order.OrderRequestDto;
+import kr.hhplus.be.server.entity.coupon.CouponEntity;
+import kr.hhplus.be.server.entity.product.ProductEntity;
+import kr.hhplus.be.server.entity.user.UserEntity;
 import kr.hhplus.be.server.service.coupon.CouponService;
 import kr.hhplus.be.server.service.product.ProductService;
 import kr.hhplus.be.server.service.user.UserService;
@@ -33,14 +33,16 @@ public class OrderFacade {
 	public void order(OrderRequestDto request) throws Exception {
 		//상품정보
 		Long goodsId = request.getGoodsId();
-		Product buyProduct = productService.getOrderProductInfo(goodsId);
+		Optional<ProductEntity> productEntity = productService.getOrderProductInfo(goodsId);
+		if(productEntity.isEmpty()) throw new Exception("상품 정보가 없습니다.");
+		ProductEntity buyProduct = productEntity.get();
 	
 		//유저정보
-		User userInfo = userService.getUserInfo(request.getUserId());
+		Optional<UserEntity> userInfo = userService.getUserInfo(request.getUserId());
 		
 		//쿠폰정보
-		Long couponId = request.getCouponId();
-		Optional<Coupon> coupon = couponService.getCoupon(couponId);
+		Long couponId = (Long) request.getCouponId();
+		Optional<CouponEntity> coupon = couponService.getCoupon(couponId);
 		
 		//가격정보
 		BigDecimal unitPrice = buyProduct.getPrice();
@@ -49,14 +51,15 @@ public class OrderFacade {
 
 		//쿠폰 디스카운트 적용
 		if(coupon.isPresent()) {
-			Coupon couponInfo = coupon.get();
-			totalPrice =  couponService.applyDiscount(couponInfo, unitPrice, buyCnt);
+			CouponEntity couponInfo = coupon.get();
+			totalPrice =  couponService.applyDiscount(couponInfo, unitPrice, buyCnt, request.getUserId());
 		}
 
-		orderService.createOrder(userInfo, buyProduct, buyCnt, totalPrice, couponId);
+		orderService.createOrder(userInfo.get(), buyProduct, buyCnt, totalPrice, couponId);
 		
 		//유저 잔액 차감
-		userService.updateUser(new User(userInfo.getUserId(), userInfo.getUserName(), userInfo.getBalance().subtract(totalPrice)));
-		
+		UserEntity userEntity = userInfo.get();
+		userEntity.deduct(totalPrice);
+		userService.updateUser(userEntity);
 	}
 }

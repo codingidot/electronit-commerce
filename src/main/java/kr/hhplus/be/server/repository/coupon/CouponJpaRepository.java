@@ -8,5 +8,4 @@ public interface CouponJpaRepository extends JpaRepository<CouponEntity, Long>{
 
 	int countByCouponId(Long couponId);
 
-	int countByCouponIdAndUserId(Long couponId, Long userId);
 }

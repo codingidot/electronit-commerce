@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.user.User;
+import kr.hhplus.be.server.entity.order.OrderEntity;
+import kr.hhplus.be.server.entity.product.ProductEntity;
+import kr.hhplus.be.server.entity.user.UserEntity;
 import kr.hhplus.be.server.repository.order.OrderRepository;
 
 @Service
@@ -20,8 +23,8 @@ public class OrderService {
 		this.orderRepository = orderRepository;
 	}
 
-	public void insertOrder(Order orderDto) {
-		orderRepository.insertOrderInfo(orderDto);
+	public void insertOrder(OrderEntity order) {
+		orderRepository.insertOrderInfo(order);
 	}
 	
 	public Long getOrderSeq() {
@@ -29,7 +32,7 @@ public class OrderService {
 	}
 
 	//주문생성
-	public void createOrder(User userInfo, Product buyProduct, int count, BigDecimal totalPrice, Long couponId) throws Exception {
+	public void createOrder(UserEntity userInfo, ProductEntity buyProduct, int count, BigDecimal totalPrice, Long couponId) throws Exception {
 		int stock = buyProduct.getStock();
 		BigDecimal balance = userInfo.getBalance();
 		Long goodsId = buyProduct.getGoodsId();
@@ -48,8 +51,8 @@ public class OrderService {
 		
 		//주문 테이블에 insert
 		Long orderNewId = this.getOrderSeq();
-		this.insertOrder(new Order(orderNewId, goodsId,couponId, userInfo.getUserId(),buyProduct.getPrice().multiply(BigDecimal.valueOf(count))
-											  , totalPrice , count, "10", LocalDateTime.now(ZoneId.of("Asia/Seoul"))));
+		OrderEntity order = OrderEntity.toEntity(userInfo, buyProduct, count, totalPrice, couponId);
+		this.insertOrder(order);
 	}
 
 }

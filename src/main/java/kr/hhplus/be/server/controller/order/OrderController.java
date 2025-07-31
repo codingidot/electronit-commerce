@@ -17,7 +17,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.dto.ResponseDto;
 import kr.hhplus.be.server.dto.order.OrderRequestDto;
 import kr.hhplus.be.server.service.order.OrderFacade;
-import kr.hhplus.be.server.service.order.OrderService;
 
 @RestController
 @RequestMapping("/orders")

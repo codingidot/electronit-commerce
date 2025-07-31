@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import kr.hhplus.be.server.domain.user.User;
 
 @Entity
 public class UserEntity {
@@ -16,8 +17,18 @@ public class UserEntity {
     private String userName;
     private BigDecimal balance;
     
-    UserEntity(){};
+    protected UserEntity(){};
     
+    private UserEntity(Long userId, String userName, BigDecimal balance) {
+		this.userId = userId;
+		this.userName = userName;
+		this.balance = balance;		
+	}
+    
+    public static UserEntity toEntity(User user) {
+    	return new UserEntity(user.getUserId(), user.getUserName(), user.getBalance());
+    }
+
 	public Long getUserId() {
 		return userId;
 	}
@@ -26,5 +37,21 @@ public class UserEntity {
 	}
 	public BigDecimal getBalance() {
 		return balance;
+	}
+	public void charge(BigDecimal amount) throws Exception {
+		if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new Exception("충전 금액은 0보다 커야 합니다.");
+        }
+        if (this.balance.add(amount).compareTo(new BigDecimal("10000000")) > 0) {
+            throw new Exception("총 잔액은 1,000만원을 넘을 수 없습니다.");
+        }
+        this.balance = this.balance.add(amount);
+	}
+	public void deduct(BigDecimal amount) throws Exception {
+		BigDecimal remain = this.balance.subtract(amount);
+		if(this.balance.subtract(amount).compareTo(BigDecimal.ZERO)<0) {
+			throw new Exception("잔액이 부족합니다.");
+		}
+        this.balance = remain;
 	}
 }

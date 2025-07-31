@@ -36,11 +36,14 @@ public class ProductJpaRepositoryImpl implements ProductRepository{
         return results;
     }
 
-
 	@Override
 	public void save(Product product) {
 		ProductEntity entity = ProductEntity.toEntity(product);
 		productRepository.save(entity);
 	}
 
+	@Override
+	public Optional<ProductEntity> findById(Long goodsId) {
+		return productRepository.findById(goodsId);
+	}
 }

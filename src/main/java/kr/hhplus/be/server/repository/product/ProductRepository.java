@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.repository.product;
 
 import java.util.List;
+import java.util.Optional;
 
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.dto.product.ProductRequestDto;
@@ -10,4 +11,5 @@ public interface ProductRepository {
 
 	List<ProductEntity> findAll(ProductRequestDto param);
 	void save(Product product);
+	Optional<ProductEntity> findById(Long goodsId);
 }
