@@ -13,4 +13,8 @@ public class ChargeResponseDto {
 	public static ChargeResponseDto toDto(BigDecimal balance) {
 		return new ChargeResponseDto(balance);
 	}
+
+	public BigDecimal getBalance() {
+		return balance;
+	}
 }
