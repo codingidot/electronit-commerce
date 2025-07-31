@@ -15,7 +15,5 @@ public interface CouponRepository {
 	
 	public CouponIssueEntity issueSave(CouponIssueEntity issueEntity);
 	
-	public Long getCouponIssueSeq();
-
 	public int checkUserCouponHave(Long couponId, Long userId);
 }

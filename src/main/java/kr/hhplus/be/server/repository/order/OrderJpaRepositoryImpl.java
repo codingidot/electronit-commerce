@@ -13,11 +13,4 @@ public class OrderJpaRepositoryImpl implements OrderRepository{
 	public void insertOrderInfo(OrderEntity entity) {
 		orderJpaRepository.save(entity);
 	}
-
-	@Override
-	public Long getOrderSeq() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

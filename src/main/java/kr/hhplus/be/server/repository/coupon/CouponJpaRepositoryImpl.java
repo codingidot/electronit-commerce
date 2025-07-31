@@ -42,10 +42,4 @@ public class CouponJpaRepositoryImpl implements CouponRepository{
 		CouponIssueEntity issueData = couponIssueRepository.findByCouponIdAndUserId(couponId, userId);
 		return issueData;
 	}
-
-	@Override
-	public Long getCouponIssueSeq() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

@@ -23,15 +23,10 @@ public class OrderService {
 	public void insertOrder(OrderEntity order) {
 		orderRepository.insertOrderInfo(order);
 	}
-	
-	public Long getOrderSeq() {
-		return orderRepository.getOrderSeq();
-	}
 
 	//주문생성
 	public void createOrder(UserEntity userInfo, ProductEntity buyProduct, int count, BigDecimal totalPrice, Long couponId) throws Exception {
 		//주문 테이블에 insert
-		Long orderNewId = this.getOrderSeq();
 		OrderEntity order = OrderEntity.toEntity(userInfo, buyProduct, count, totalPrice, couponId);
 		this.insertOrder(order);
 	}
