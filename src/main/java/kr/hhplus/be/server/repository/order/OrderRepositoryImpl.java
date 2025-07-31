@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import kr.hhplus.be.server.entity.order.OrderEntity;
 
 @Repository
-public class OrderJpaRepositoryImpl implements OrderRepository{
+public class OrderRepositoryImpl implements OrderRepository{
 
 	OrderJpaRepository orderJpaRepository;
 	

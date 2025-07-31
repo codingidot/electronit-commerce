@@ -10,7 +10,7 @@ import kr.hhplus.be.server.dto.product.ProductRequestDto;
 import kr.hhplus.be.server.entity.product.ProductEntity;
 
 @Repository
-public class ProductJpaRepositoryImpl implements ProductRepository{
+public class ProductRepositoryImpl implements ProductRepository{
 
 	ProductJpaRepository productRepository;
 	

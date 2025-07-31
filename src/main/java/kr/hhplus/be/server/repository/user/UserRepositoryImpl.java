@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import kr.hhplus.be.server.entity.user.UserEntity;
 
 @Repository
-public class UserJpaRepositoryImpl implements UserRepository{
+public class UserRepositoryImpl implements UserRepository{
 
 	UserJpaRepository userJpaRepository;
 	
