@@ -5,11 +5,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import kr.hhplus.be.server.dto.ResponseDto;
-import kr.hhplus.be.server.dto.product.Product;
 import kr.hhplus.be.server.dto.product.ProductRequestDto;
-
+import kr.hhplus.be.server.dto.product.ProductResponseDto;
 import kr.hhplus.be.server.service.product.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +44,7 @@ public class ProductController {
         ResponseDto res = new ResponseDto();
 
         try {
-            List<Product> list = productService.getProductList(requestDto);
+            List<ProductResponseDto> list = productService.getProductList(requestDto);
             res.setData(list);
         } catch(Exception e) {
             e.printStackTrace();
