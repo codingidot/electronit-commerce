@@ -2,11 +2,12 @@ package kr.hhplus.be.server.entity.coupon;
 
 import java.util.Optional;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import kr.hhplus.be.server.dto.coupon.CouponIssueDto;
 
+@Entity
 public class CouponIssueEntity {
 	
 	@Id
