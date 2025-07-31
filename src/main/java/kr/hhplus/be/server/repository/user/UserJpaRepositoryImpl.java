@@ -2,7 +2,6 @@ package kr.hhplus.be.server.repository.user;
 
 import java.util.Optional;
 
-import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.entity.user.UserEntity;
 
 public class UserJpaRepositoryImpl implements UserRepository{

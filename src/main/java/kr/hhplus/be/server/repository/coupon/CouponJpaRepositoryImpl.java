@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.entity.coupon.CouponEntity;
 import kr.hhplus.be.server.entity.coupon.CouponIssueEntity;
 
@@ -18,12 +17,7 @@ public class CouponJpaRepositoryImpl implements CouponRepository{
 	@Override
 	public Optional<CouponEntity> getCoupon(Long couponId) {
 		Optional<CouponEntity> result = couponJpaRepository.findById(couponId);
-		Coupon cp;
-		if(result.isPresent()) {
-			CouponEntity entity = result.get();
-			return Optional.ofNullable(entity);
-		}
-		return Optional.empty();
+		return result;
 	}
 
 	@Override

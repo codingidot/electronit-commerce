@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import kr.hhplus.be.server.domain.user.User;
 
 @Entity
 public class UserEntity {
@@ -18,16 +17,6 @@ public class UserEntity {
     private BigDecimal balance;
     
     protected UserEntity(){};
-    
-    private UserEntity(Long userId, String userName, BigDecimal balance) {
-		this.userId = userId;
-		this.userName = userName;
-		this.balance = balance;		
-	}
-    
-    public static UserEntity toEntity(User user) {
-    	return new UserEntity(user.getUserId(), user.getUserName(), user.getBalance());
-    }
 
 	public Long getUserId() {
 		return userId;

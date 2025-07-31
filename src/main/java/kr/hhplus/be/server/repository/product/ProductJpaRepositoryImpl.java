@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.dto.product.ProductRequestDto;
 import kr.hhplus.be.server.entity.product.ProductEntity;
 
@@ -37,8 +36,7 @@ public class ProductJpaRepositoryImpl implements ProductRepository{
     }
 
 	@Override
-	public void save(Product product) {
-		ProductEntity entity = ProductEntity.toEntity(product);
+	public void save(ProductEntity entity) {
 		productRepository.save(entity);
 	}
 

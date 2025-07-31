@@ -34,12 +34,9 @@ public class OrderFacade {
 		//상품정보
 		Long goodsId = request.getGoodsId();
 		Optional<ProductEntity> productEntity = productService.getOrderProductInfo(goodsId);
-		if(productEntity.isEmpty()) throw new Exception("상품 정보가 없습니다.");
+		productService.deductStock(productEntity,request.getCount());//재고차감
 		ProductEntity buyProduct = productEntity.get();
 	
-		//유저정보
-		Optional<UserEntity> userInfo = userService.getUserInfo(request.getUserId());
-		
 		//쿠폰정보
 		Long couponId = (Long) request.getCouponId();
 		Optional<CouponEntity> coupon = couponService.getCoupon(couponId);
@@ -54,12 +51,12 @@ public class OrderFacade {
 			CouponEntity couponInfo = coupon.get();
 			totalPrice =  couponService.applyDiscount(couponInfo, unitPrice, buyCnt, request.getUserId());
 		}
-
-		orderService.createOrder(userInfo.get(), buyProduct, buyCnt, totalPrice, couponId);
 		
-		//유저 잔액 차감
-		UserEntity userEntity = userInfo.get();
-		userEntity.deduct(totalPrice);
-		userService.updateUser(userEntity);
+		//유저정보
+		Optional<UserEntity> userInfo = userService.getUserInfo(request.getUserId());
+		userService.deductBalance(userInfo, totalPrice);//잔액차감
+		
+		//주문생성
+		orderService.createOrder(userInfo.get(), buyProduct, buyCnt, totalPrice, couponId);
 	}
 }

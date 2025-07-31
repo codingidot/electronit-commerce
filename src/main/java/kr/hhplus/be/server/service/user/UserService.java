@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.service.user;
 
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,16 @@ public class UserService {
 	//유저정보 변경
 	public void updateUser(UserEntity user) {
 		userRepository.save(user);
+	}
+
+	//잔액차감
+	public void deductBalance(Optional<UserEntity> userInfo, BigDecimal totalPrice) throws Exception {
+		if(userInfo.isEmpty()) {
+			throw new Exception("유저 정보가 존재하지 않습니다.");
+		}
+		UserEntity entity = userInfo.get();
+		entity.deduct(totalPrice);
+		userRepository.save(entity);
 	}
 
 }

@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.dto.ResponseDto;
 import kr.hhplus.be.server.dto.product.ProductRequestDto;
 import kr.hhplus.be.server.dto.product.ProductResponseDto;
