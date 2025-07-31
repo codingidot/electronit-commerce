@@ -58,7 +58,7 @@ public class OrderController {
         }catch(Exception e) {
         	res.setCode(500);
         	res.setMessage(e.getMessage());
-        	ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
         }
         return ResponseEntity.ok(res);
     }
