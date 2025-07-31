@@ -9,8 +9,13 @@ import kr.hhplus.be.server.entity.user.UserEntity;
 @Repository
 public class UserRepositoryImpl implements UserRepository{
 
-	UserJpaRepository userJpaRepository;
+	private final UserJpaRepository userJpaRepository;
 	
+	public UserRepositoryImpl(UserJpaRepository userJpaRepository) {
+		super();
+		this.userJpaRepository = userJpaRepository;
+	}
+
 	@Override
 	public Optional<UserEntity> findById(Long id) {
 		return userJpaRepository.findById(id);

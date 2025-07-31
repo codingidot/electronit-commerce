@@ -7,7 +7,11 @@ import kr.hhplus.be.server.entity.order.OrderEntity;
 @Repository
 public class OrderRepositoryImpl implements OrderRepository{
 
-	OrderJpaRepository orderJpaRepository;
+	private final OrderJpaRepository orderJpaRepository;
+
+    public OrderRepositoryImpl(OrderJpaRepository orderJpaRepository) {
+        this.orderJpaRepository = orderJpaRepository;
+    }
 	
 	@Override
 	public void insertOrderInfo(OrderEntity entity) {

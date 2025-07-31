@@ -12,7 +12,11 @@ import kr.hhplus.be.server.entity.product.ProductEntity;
 @Repository
 public class ProductRepositoryImpl implements ProductRepository{
 
-	ProductJpaRepository productRepository;
+	private final ProductJpaRepository productRepository;
+
+    public ProductRepositoryImpl(ProductJpaRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 	
 	@Override
     public List<ProductEntity> findAll(ProductRequestDto param) {
