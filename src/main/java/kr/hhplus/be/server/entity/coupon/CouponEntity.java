@@ -18,7 +18,7 @@ public class CouponEntity {
     private BigDecimal couponValue;
     private int count;
     
-    protected CouponEntity(){};
+    public CouponEntity(){};
     
 	public Long getCouponId() {
 		return couponId;
@@ -34,5 +34,24 @@ public class CouponEntity {
 	}
 	public int getCount() {
 		return count;
+	}
+	public void setCouponId(Long couponId) {
+		this.couponId = couponId;
+	}
+
+	public void setCouponName(String couponName) {
+		this.couponName = couponName;
+	}
+
+	public void setCouponType(String couponType) {
+		this.couponType = couponType;
+	}
+
+	public void setCouponValue(BigDecimal couponValue) {
+		this.couponValue = couponValue;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 }

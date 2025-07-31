@@ -20,7 +20,7 @@ public class CouponIssueEntity {
 
     private String useYn;
 
-    protected CouponIssueEntity() {}
+    public CouponIssueEntity() {}
     
     private CouponIssueEntity(Long issuedId, Long couponId, Long userId, String useYn) {
     	this.issueId = issuedId;
@@ -68,6 +68,16 @@ public class CouponIssueEntity {
 	public Long getUserId() {
 		return userId;
 	}
-    
-    
+
+	public void setIssueId(Long issueId) {
+		this.issueId = issueId;
+	}
+
+	public void setCouponId(Long couponId) {
+		this.couponId = couponId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 }

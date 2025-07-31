@@ -10,8 +10,14 @@ import kr.hhplus.be.server.entity.coupon.CouponIssueEntity;
 @Repository
 public class CouponJpaRepositoryImpl implements CouponRepository{
 
-	CouponJpaRepository couponJpaRepository;
-	CouponIssueJpaRepository couponIssueRepository;
+	private final CouponJpaRepository couponJpaRepository;
+    private final CouponIssueJpaRepository couponIssueRepository;
+
+    public CouponJpaRepositoryImpl(CouponJpaRepository couponJpaRepository,
+                                  CouponIssueJpaRepository couponIssueRepository) {
+        this.couponJpaRepository = couponJpaRepository;
+        this.couponIssueRepository = couponIssueRepository;
+    }
 	
 	
 	@Override
