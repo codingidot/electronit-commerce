@@ -7,6 +7,9 @@ public class ProductRequestDto {
     private String goodsName;
     private String goodsType;
     
+    public ProductRequestDto() {
+    }
+    
     public ProductRequestDto(Long goodsId, String goodsName, String goodsType) {
 		this.goodsId = goodsId;
 		this.goodsName = goodsName;

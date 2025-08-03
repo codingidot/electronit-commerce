@@ -8,7 +8,7 @@ public class ChargeRequestDto {
 	private Long userId;
 	
 	private BigDecimal amount;
-	
+	public ChargeRequestDto() {};
 	public ChargeRequestDto(Long userId, BigDecimal amount) {
 		this.userId = userId;
 		this.amount = amount;
