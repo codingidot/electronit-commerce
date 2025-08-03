@@ -22,8 +22,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kr.hhplus.be.server.entity.product.ProductEntity;
-import kr.hhplus.be.server.repository.product.ProductJpaRepository;
+import kr.hhplus.be.server.product.entity.ProductEntity;
+import kr.hhplus.be.server.product.repository.ProductJpaRepository;
 
 @SpringBootTest
 @Testcontainers
