@@ -25,8 +25,8 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import kr.hhplus.be.server.entity.user.UserEntity;
-import kr.hhplus.be.server.repository.user.UserJpaRepository;
+import kr.hhplus.be.server.user.entity.UserEntity;
+import kr.hhplus.be.server.user.repository.UserJpaRepository;
 
 @SpringBootTest
 @AutoConfigureMockMvc

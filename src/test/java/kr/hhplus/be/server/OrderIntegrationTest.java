@@ -22,17 +22,16 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import kr.hhplus.be.server.entity.order.OrderEntity;
-import kr.hhplus.be.server.entity.user.UserEntity;
-import kr.hhplus.be.server.entity.product.ProductEntity;
-import kr.hhplus.be.server.entity.coupon.CouponEntity;
-import kr.hhplus.be.server.entity.coupon.CouponIssueEntity;
-
-import kr.hhplus.be.server.repository.order.OrderJpaRepository;
-import kr.hhplus.be.server.repository.user.UserJpaRepository;
-import kr.hhplus.be.server.repository.product.ProductJpaRepository;
-import kr.hhplus.be.server.repository.coupon.CouponJpaRepository;
-import kr.hhplus.be.server.repository.coupon.CouponIssueJpaRepository;
+import kr.hhplus.be.server.order.entity.OrderEntity;
+import kr.hhplus.be.server.order.repository.OrderJpaRepository;
+import kr.hhplus.be.server.product.entity.ProductEntity;
+import kr.hhplus.be.server.product.repository.ProductJpaRepository;
+import kr.hhplus.be.server.coupon.entity.CouponEntity;
+import kr.hhplus.be.server.coupon.entity.CouponIssueEntity;
+import kr.hhplus.be.server.coupon.repository.CouponIssueJpaRepository;
+import kr.hhplus.be.server.coupon.repository.CouponJpaRepository;
+import kr.hhplus.be.server.user.entity.UserEntity;
+import kr.hhplus.be.server.user.repository.UserJpaRepository;
 
 @SpringBootTest
 @Testcontainers
