@@ -15,5 +15,7 @@ public interface CouponRepository {
 	
 	public CouponIssueEntity issueSave(CouponIssueEntity issueEntity);
 	
+	public CouponEntity couponSave(CouponEntity couponentity);
+	
 	public int checkUserCouponHave(Long couponId, Long userId);
 }

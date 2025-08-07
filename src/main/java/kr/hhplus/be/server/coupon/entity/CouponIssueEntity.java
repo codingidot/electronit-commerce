@@ -29,11 +29,13 @@ public class CouponIssueEntity {
     	this.useYn = useYn;
     }
     
-    public static CouponIssueEntity toEntity(Optional<CouponEntity> cpEntity, int issuedCnt, int userIssueCnt, Long userId) throws Exception {
+    public static CouponIssueEntity toEntity(Optional<CouponEntity> cpEntity, int userIssueCnt, Long userId) throws Exception {
     	CouponEntity coupon;
     	if(cpEntity.isEmpty()) {
         	throw new Exception("해당 쿠폰은 존재하지 않습니다.");
         }else {
+        	coupon = cpEntity.get();
+        	int issuedCnt = coupon.getIssuedCount();
         	coupon = cpEntity.get();
         	int limit = coupon.getCount();
         	Long couponId = coupon.getCouponId();
