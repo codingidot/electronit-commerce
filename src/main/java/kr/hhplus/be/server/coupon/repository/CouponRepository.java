@@ -11,7 +11,7 @@ public interface CouponRepository {
 
 	public int getIssueData(Long couponId);
 	
-	public Optional<CouponIssueEntity> getUserIssueData(Long couponId, Long userId);
+	public CouponIssueEntity getUserIssueData(Long couponId, Long userId);
 	
 	public CouponIssueEntity issueSave(CouponIssueEntity issueEntity);
 	

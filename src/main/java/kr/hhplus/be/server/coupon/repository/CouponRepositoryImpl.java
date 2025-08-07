@@ -49,9 +49,9 @@ public class CouponRepositoryImpl implements CouponRepository{
 	}
 	
 	@Override
-	public Optional<CouponIssueEntity> getUserIssueData(Long couponId, Long userId) {
+	public CouponIssueEntity getUserIssueData(Long couponId, Long userId) {
 		CouponIssueEntity issueData = couponIssueRepository.findByCouponIdAndUserId(couponId, userId);
-		return Optional.ofNullable(issueData);
+		return issueData;
 	}
 
 
