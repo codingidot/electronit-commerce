@@ -31,8 +31,6 @@ public class CouponIssueEntity {
     
     public static CouponIssueEntity toEntity(Optional<CouponEntity> cpEntity, int userIssueCnt, Long userId) throws Exception {
     	CouponEntity coupon;
-    	System.out.println("쿠폰id!! > " + cpEntity.get().getCouponId());
-    	System.out.println("유저id!! . " + userId);
     	if(cpEntity.isEmpty()) {
         	throw new Exception("해당 쿠폰은 존재하지 않습니다.");
         }else {
