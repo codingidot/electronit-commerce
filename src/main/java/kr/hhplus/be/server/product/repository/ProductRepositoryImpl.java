@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Repository;
 
+import jakarta.persistence.LockModeType;
 import kr.hhplus.be.server.product.dto.ProductRequestDto;
 import kr.hhplus.be.server.product.entity.ProductEntity;
 
@@ -43,11 +45,12 @@ public class ProductRepositoryImpl implements ProductRepository{
     }
 
 	@Override
-	public void save(ProductEntity entity) {
-		productRepository.save(entity);
+	public ProductEntity save(ProductEntity entity) {
+		return productRepository.save(entity);
 	}
 
 	@Override
+	@Lock(LockModeType.OPTIMISTIC)
 	public Optional<ProductEntity> findById(Long goodsId) {
 		return productRepository.findById(goodsId);
 	}
