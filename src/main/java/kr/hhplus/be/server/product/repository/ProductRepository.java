@@ -10,5 +10,5 @@ public interface ProductRepository {
 
 	List<ProductEntity> findAll(ProductRequestDto param);
 	Optional<ProductEntity> findById(Long goodsId);
-	void save(ProductEntity entity);
+	ProductEntity save(ProductEntity entity);
 }
