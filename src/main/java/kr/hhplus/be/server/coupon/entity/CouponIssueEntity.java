@@ -45,7 +45,7 @@ public class CouponIssueEntity {
     		}
         	
         	if(userIssueCnt > 0 ) {
-        		throw new Exception("이미 발급받은 쿠폰입니다.");
+        		//throw new Exception("이미 발급받은 쿠폰입니다.");
         	}
         }
         return new CouponIssueEntity(null,coupon.getCouponId(),userId, "N");

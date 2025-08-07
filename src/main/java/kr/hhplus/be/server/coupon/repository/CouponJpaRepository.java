@@ -12,7 +12,7 @@ public interface CouponJpaRepository extends JpaRepository<CouponEntity, Long>{
 
 	int countByCouponId(Long couponId);
 	
-	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
 	Optional<CouponEntity> findById(Long CouponId);
 
 }
