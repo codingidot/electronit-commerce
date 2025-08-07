@@ -17,6 +17,7 @@ public class CouponEntity {
     private String couponType;
     private BigDecimal couponValue;
     private int count;
+    private int issuedCount;
     
     public CouponEntity(){};
     
@@ -34,6 +35,9 @@ public class CouponEntity {
 	}
 	public int getCount() {
 		return count;
+	}
+	public int getIssuedCount() {
+		return issuedCount;
 	}
 	public void setCouponId(Long couponId) {
 		this.couponId = couponId;
@@ -54,4 +58,9 @@ public class CouponEntity {
 	public void setCount(int count) {
 		this.count = count;
 	}
+
+	public void setIssuedCount(int issuedCount) {
+		this.issuedCount = issuedCount;
+	}
+	
 }

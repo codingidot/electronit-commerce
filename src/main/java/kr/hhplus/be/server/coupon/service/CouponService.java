@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.hhplus.be.server.coupon.dto.CouponIssueRequestDto;
 import kr.hhplus.be.server.coupon.entity.CouponEntity;
@@ -25,16 +26,20 @@ public class CouponService {
 	}
 
 	//쿠폰 발급
+	@Transactional(rollbackFor = Exception.class)
 	public void issueCoupon(CouponIssueRequestDto requestDto) throws Exception {
 		Long userId = requestDto.getUserId();
 		Long couponId = requestDto.getCouponId();
-		int issuedCnt = couponRepository.getIssueData(couponId);//해당 쿠폰의 총 발급수
-		int userIssueCnt = couponRepository.checkUserCouponHave(couponId, userId);
-		Optional<CouponEntity> coupon = couponRepository.getCoupon(couponId);
 
-		CouponIssueEntity issueEntity = CouponIssueEntity.toEntity(coupon, issuedCnt, userIssueCnt, userId);
-		
+		Optional<CouponEntity> coupon = couponRepository.getCoupon(couponId);//쿠폰정보
+		int userIssueCnt = couponRepository.checkUserCouponHave(couponId, userId);//사용자가 해당 쿠폰을 발급받은 수
+		CouponIssueEntity issueEntity = CouponIssueEntity.toEntity(coupon, userIssueCnt, userId);//쿠폰발급 생성
+		CouponEntity couponEntity = coupon.get();
+		couponEntity.setIssuedCount(couponEntity.getIssuedCount()+1);//쿠폰 발급 수 +1
+		//저장
+		couponRepository.couponSave(couponEntity);
 		couponRepository.issueSave(issueEntity);
+
 	}
 
 	//쿠폰가격 적용
