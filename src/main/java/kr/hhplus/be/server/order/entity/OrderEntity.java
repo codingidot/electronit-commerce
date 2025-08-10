@@ -4,10 +4,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import kr.hhplus.be.server.order.converter.OrderStateConverter;
+import kr.hhplus.be.server.order.enums.OrderState;
 import kr.hhplus.be.server.product.entity.ProductEntity;
 import kr.hhplus.be.server.user.entity.UserEntity;
 
@@ -23,12 +26,13 @@ public class OrderEntity {
 	BigDecimal orderPrice; 
 	BigDecimal payPrice; 
 	int count; 
-	String orderState;
+	@Convert(converter = OrderStateConverter.class)
+    private OrderState orderState;
 	LocalDateTime orderDate;
 	
 	protected OrderEntity(){};
 	private OrderEntity(Long orderId, Long goodsId, Long couponId, Long userId, BigDecimal orderPrice,
-			BigDecimal payPrice, int count, String orderState, LocalDateTime orderDate) {
+			BigDecimal payPrice, int count, OrderState orderState, LocalDateTime orderDate) {
 		this.orderId = orderId;
 		this.goodsId = goodsId;
 		this.couponId = couponId;
@@ -58,7 +62,7 @@ public class OrderEntity {
 		}
 		
 		return new OrderEntity(null, goodsId, couponId, userInfo.getUserId(), buyProduct.getPrice().multiply(BigDecimal.valueOf(count)),
-							totalPrice, count, "10", LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+							totalPrice, count, OrderState.REQUEST, LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 	}
 
 	public Long getOrderId() {
@@ -82,7 +86,7 @@ public class OrderEntity {
 	public int getCount() {
 		return count;
 	}
-	public String getOrderState() {
+	public OrderState getOrderState() {
 		return orderState;
 	}
 
