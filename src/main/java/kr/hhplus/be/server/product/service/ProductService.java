@@ -31,13 +31,14 @@ public class ProductService {
 	}
 
 	//재고차감
-	public void deductStock(Optional<ProductEntity> productEntity, int count) throws Exception {
+	public ProductEntity deductStock(Optional<ProductEntity> productEntity, int count) throws Exception {
 		if(productEntity.isEmpty()) {
 			throw new Exception("상품 정보가 없습니다.");
 		}
 		ProductEntity entity = productEntity.get();
 		entity.deductStock(count);
-		productRepository.save(entity);
+		entity = productRepository.save(entity);
+		return entity;
 	}
 
 }

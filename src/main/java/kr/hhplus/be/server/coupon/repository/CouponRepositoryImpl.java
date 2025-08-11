@@ -28,7 +28,12 @@ public class CouponRepositoryImpl implements CouponRepository{
 
 	@Override
 	public int getIssueData(Long couponId) {
-		return couponJpaRepository.countByCouponId(couponId);
+		Optional<CouponEntity> coupon = couponJpaRepository.findById(couponId);
+		int issuedCnt = 0;
+		if(coupon.isPresent()) {
+			issuedCnt = coupon.get().getIssuedCount();
+		}
+		return issuedCnt;
 	}
 	
 	@Override
@@ -47,5 +52,12 @@ public class CouponRepositoryImpl implements CouponRepository{
 	public CouponIssueEntity getUserIssueData(Long couponId, Long userId) {
 		CouponIssueEntity issueData = couponIssueRepository.findByCouponIdAndUserId(couponId, userId);
 		return issueData;
+	}
+
+
+	@Override
+	public CouponEntity couponSave(CouponEntity couponentity) {
+		CouponEntity entity = couponJpaRepository.save(couponentity);
+		return entity;
 	}
 }

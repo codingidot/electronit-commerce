@@ -2,6 +2,8 @@ package kr.hhplus.be.server.coupon.entity;
 
 import java.math.BigDecimal;
 
+import jakarta.persistence.Version; 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +19,10 @@ public class CouponEntity {
     private String couponType;
     private BigDecimal couponValue;
     private int count;
+    private int issuedCount;
+    
+    @Version
+    private Long version;
     
     public CouponEntity(){};
     
@@ -34,6 +40,12 @@ public class CouponEntity {
 	}
 	public int getCount() {
 		return count;
+	}
+	public int getIssuedCount() {
+		return issuedCount;
+	}
+	public Long getVersion() {
+	    return version;
 	}
 	public void setCouponId(Long couponId) {
 		this.couponId = couponId;
@@ -54,4 +66,12 @@ public class CouponEntity {
 	public void setCount(int count) {
 		this.count = count;
 	}
+
+	public void setIssuedCount(int issuedCount) {
+		this.issuedCount = issuedCount;
+	}
+	public void setVersion(Long version) {
+	    this.version = version;
+	}
+	
 }

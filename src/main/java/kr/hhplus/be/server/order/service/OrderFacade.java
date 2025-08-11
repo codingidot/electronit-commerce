@@ -3,7 +3,10 @@ package kr.hhplus.be.server.order.service;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.hhplus.be.server.coupon.entity.CouponEntity;
@@ -21,6 +24,7 @@ public class OrderFacade {
 	private final UserService userService;
 	private final CouponService couponService;
 	private final OrderService orderService;
+	private static int MAX_RETRY = 5;
 	
 	OrderFacade(ProductService productService,UserService userService, CouponService couponService, OrderService orderService){
 		this.productService = productService;
@@ -29,18 +33,21 @@ public class OrderFacade {
 		this.orderService = orderService;
 	}
 	
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional
+	@Retryable(
+        value = { ObjectOptimisticLockingFailureException.class }, // 어떤 예외에서 재시도할지
+        maxAttempts = 3                    // 최대 재시도 횟수
+    )
 	public void order(OrderRequestDto request) throws Exception {
 		//상품정보
 		Long goodsId = request.getGoodsId();
 		Optional<ProductEntity> productEntity = productService.getOrderProductInfo(goodsId);
-		productService.deductStock(productEntity,request.getCount());//재고차감
-		ProductEntity buyProduct = productEntity.get();
-	
+		ProductEntity buyProduct = productService.deductStock(productEntity,request.getCount());//재고차감
+
 		//쿠폰정보
 		Long couponId = request.getCouponId();
 		Optional<CouponEntity> coupon = Optional.empty();
-		if (couponId != null) {
+		if (couponId != null && couponId != 0) {
 		    coupon = couponService.getCoupon(couponId);
 		}
 		
