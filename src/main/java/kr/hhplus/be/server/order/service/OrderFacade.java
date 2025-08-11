@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,27 +33,12 @@ public class OrderFacade {
 		this.orderService = orderService;
 	}
 	
+	@Transactional
+	@Retryable(
+        value = { ObjectOptimisticLockingFailureException.class }, // 어떤 예외에서 재시도할지
+        maxAttempts = 3                    // 최대 재시도 횟수
+    )
 	public void order(OrderRequestDto request) throws Exception {
-		int tryCnt = 0;
-		while(tryCnt < MAX_RETRY) {
-			try {
-				this.orderWithTransaction(request);
-				break;
-			}catch(ObjectOptimisticLockingFailureException e) {
-				//낙관적 락 에러 발생시 재시도
-				tryCnt++;
-				if (tryCnt >= MAX_RETRY) {
-	                throw new Exception("해당 상품을 구매하는 사용자가 많아 실패하였습니다. 잠시후 다시 시도해주세요.", e);
-	            }
-				try { Thread.sleep(500); } catch (InterruptedException ignored) {};
-			}catch(Exception e) {
-				throw e;
-			}
-		}
-	}
-	
-	@Transactional(rollbackFor = Exception.class, isolation= Isolation.READ_COMMITTED)
-	public void orderWithTransaction(OrderRequestDto request) throws Exception{
 		//상품정보
 		Long goodsId = request.getGoodsId();
 		Optional<ProductEntity> productEntity = productService.getOrderProductInfo(goodsId);
