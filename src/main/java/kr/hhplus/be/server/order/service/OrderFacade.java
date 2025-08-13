@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.hhplus.be.server.annotation.DistributedLock;
 import kr.hhplus.be.server.coupon.entity.CouponEntity;
 import kr.hhplus.be.server.coupon.service.CouponService;
 import kr.hhplus.be.server.order.dto.OrderRequestDto;
@@ -34,10 +35,7 @@ public class OrderFacade {
 	}
 	
 	@Transactional
-	@Retryable(
-        value = { ObjectOptimisticLockingFailureException.class }, // 어떤 예외에서 재시도할지
-        maxAttempts = 3                    // 최대 재시도 횟수
-    )
+	@DistributedLock(type="order",keys = {"'product:' + #p0.getGoodsId()", "'user:' + #p0.getUserId()"} )
 	public void order(OrderRequestDto request) throws Exception {
 		//상품정보
 		Long goodsId = request.getGoodsId();
