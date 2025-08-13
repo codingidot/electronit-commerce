@@ -21,9 +21,6 @@ public class ProductEntity {
     private String goodsType;
     private Long repreGoodsId;
     
-    @Version
-    Long version;
-    
     public ProductEntity(){};
 
 	public Long getGoodsId() {
@@ -53,10 +50,6 @@ public class ProductEntity {
 	public void deductStock(int cnt) throws Exception {
 		if(this.stock < cnt) throw new Exception("재고가 부족합니다.");
 		this.stock -= cnt;
-	}
-
-	public Long getVersion() {
-		return version;
 	}
 
 	public void setGoodsId(Long goodsId) {
