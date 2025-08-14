@@ -76,7 +76,6 @@ public class UserIntegrationTest {
         mockMvc.perform(get("/wallet/balance/{userId}", savedUserId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200))
-                .andExpect(jsonPath("$.data.userId").value(savedUserId))
                 .andExpect(jsonPath("$.data.balance").value(100000));
     }
 

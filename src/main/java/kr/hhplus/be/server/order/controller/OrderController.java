@@ -3,9 +3,11 @@ package kr.hhplus.be.server.order.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.dto.ResponseDto;
 import kr.hhplus.be.server.order.dto.OrderRequestDto;
 import kr.hhplus.be.server.order.service.OrderFacade;
+import kr.hhplus.be.server.order.service.OrderService;
 
 @RestController
 @RequestMapping("/orders")
@@ -24,10 +27,12 @@ import kr.hhplus.be.server.order.service.OrderFacade;
 public class OrderController {
 
     private final OrderFacade orderFacade;
+    private final OrderService orderService;
 
     @Autowired
-    public OrderController(OrderFacade orderFacade) {
+    public OrderController(OrderFacade orderFacade, OrderService orderService) {
         this.orderFacade = orderFacade;
+        this.orderService = orderService; 
     }
 
     @PostMapping
@@ -62,4 +67,17 @@ public class OrderController {
         }
         return ResponseEntity.ok(res);
     }
+   
+    @GetMapping("/orderInfo")
+    public ResponseEntity<ResponseDto> getOrderInfo(@RequestParam Long orderId){
+    	ResponseDto res = new ResponseDto();
+        try {
+        	res.setData(orderService.getOrderInfo(orderId));
+        }catch(Exception e) {
+        	res.setCode(500);
+        	res.setMessage(e.getMessage());
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+        }
+        return ResponseEntity.ok(res);
+   }
 }
