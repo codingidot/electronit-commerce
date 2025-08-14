@@ -35,7 +35,7 @@ public class OrderFacade {
 	}
 	
 	@Transactional
-	@DistributedLock(type="order",keys = {"'product:' + #p0.getGoodsId()", "'user:' + #p0.getUserId()"} )
+	@DistributedLock(type="order", keys = {"'product:' + #request.goodsId", "'user:' + #request.userId"})
 	public void order(OrderRequestDto request) throws Exception {
 		//상품정보
 		Long goodsId = request.getGoodsId();
