@@ -1,5 +1,7 @@
 package kr.hhplus.be.server.order.repository;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 import kr.hhplus.be.server.order.entity.OrderEntity;
@@ -16,5 +18,10 @@ public class OrderRepositoryImpl implements OrderRepository{
 	@Override
 	public void insertOrderInfo(OrderEntity entity) {
 		orderJpaRepository.save(entity);
+	}
+
+	@Override
+	public Optional<OrderEntity> getOrderInfo(Long goodsId) {
+		return orderJpaRepository.findById(goodsId);
 	}
 }
