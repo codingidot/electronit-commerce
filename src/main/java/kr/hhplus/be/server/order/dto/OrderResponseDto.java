@@ -27,4 +27,36 @@ public class OrderResponseDto {
 		this.orderState = orderState;
 		this.orderDate = orderDate;
 	}
+
+	public Long getGoodsId() {
+		return goodsId;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public Long getCouponId() {
+		return couponId;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public BigDecimal getOrderPrice() {
+		return orderPrice;
+	}
+
+	public BigDecimal getPayPrice() {
+		return payPrice;
+	}
+
+	public OrderState getOrderState() {
+		return orderState;
+	}
+
+	public LocalDateTime getOrderDate() {
+		return orderDate;
+	}
 }
