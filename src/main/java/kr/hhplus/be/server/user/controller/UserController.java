@@ -46,7 +46,7 @@ public class UserController {
 
         ResponseDto res = new ResponseDto();
         try {
-            res.setData(userService.getUserInfo(userId));
+            res.setData(userService.getUserBalance(userId));
         } catch(Exception e) {
             res.setCode(500);
             res.setMessage(e.getMessage());
