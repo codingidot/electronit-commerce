@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ProductResponseDto {
+public class ProductResponse {
 	
 	private Long goodsId;
     private String goodsName;
@@ -16,7 +16,7 @@ public class ProductResponseDto {
     private Integer stock;
     private String goodsType;
 
-	public static ProductResponseDto toDto(ProductEntity product) {
-        return new ProductResponseDto(product.getGoodsId(), product.getGoodsName(), product.getPrice(), product.getStock(), product.getGoodsType());
+	public static ProductResponse toDto(ProductEntity product) {
+        return new ProductResponse(product.getGoodsId(), product.getGoodsName(), product.getPrice(), product.getStock(), product.getGoodsType());
     }
 }

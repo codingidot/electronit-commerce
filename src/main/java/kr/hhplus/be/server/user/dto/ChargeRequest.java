@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class ChargeRequestDto {
+public class ChargeRequest {
 
 	private Long userId;
 	

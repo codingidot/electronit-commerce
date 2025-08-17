@@ -5,10 +5,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CouponIssueDto {
-
-	private Long issueId;
-	private Long couponId;
+public class CouponIssueRequest {
+	
 	private Long userId;
-	private String useYn;
+	private Long couponId; 
 }

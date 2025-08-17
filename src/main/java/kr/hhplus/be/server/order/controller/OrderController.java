@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.dto.ResponseDto;
-import kr.hhplus.be.server.order.dto.OrderRequestDto;
+import kr.hhplus.be.server.order.dto.OrderRequest;
 import kr.hhplus.be.server.order.service.OrderFacade;
 import kr.hhplus.be.server.order.service.OrderService;
 
@@ -43,7 +43,7 @@ public class OrderController {
             required = true,
             description = "주문 요청 정보",
             content = @Content(
-                schema = @Schema(implementation = OrderRequestDto.class),
+                schema = @Schema(implementation = OrderRequest.class),
                 examples = @ExampleObject(value = "{ \"userId\": 1, \"productId\": 100, \"quantity\": 2 }")
             )
         ),
@@ -56,7 +56,7 @@ public class OrderController {
                 content = @Content)
         }
     )
-    public ResponseEntity<ResponseDto> orderPoroduct(@RequestBody OrderRequestDto orderRequestDto) {
+    public ResponseEntity<ResponseDto> orderPoroduct(@RequestBody OrderRequest orderRequestDto) {
         ResponseDto res = new ResponseDto();
         try {
         	orderFacade.order(orderRequestDto);

@@ -7,11 +7,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ChargeResponseDto {
+public class BalanceResponse {
 
 	private BigDecimal balance;
-
-	public static ChargeResponseDto toDto(BigDecimal balance) {
-		return new ChargeResponseDto(balance);
-	}
 }

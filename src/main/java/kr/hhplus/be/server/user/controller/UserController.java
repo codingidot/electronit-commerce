@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.dto.ResponseDto;
-import kr.hhplus.be.server.user.dto.ChargeRequestDto;
+import kr.hhplus.be.server.user.dto.ChargeRequest;
 import kr.hhplus.be.server.user.service.UserService;
 
 @RestController
@@ -63,7 +63,7 @@ public class UserController {
             description = "충전 요청 정보",
             required = true,
             content = @Content(
-                schema = @Schema(implementation = ChargeRequestDto.class),
+                schema = @Schema(implementation = ChargeRequest.class),
                 examples = @ExampleObject(
                     value = "{\"userId\": 1, \"amount\": 10000}"
                 )
@@ -75,7 +75,7 @@ public class UserController {
         }
     )
     public ResponseEntity<ResponseDto> chargeBalance(
-        @org.springframework.web.bind.annotation.RequestBody ChargeRequestDto chargeRequestDto) {
+        @org.springframework.web.bind.annotation.RequestBody ChargeRequest chargeRequestDto) {
 
         ResponseDto res = new ResponseDto();
         try {

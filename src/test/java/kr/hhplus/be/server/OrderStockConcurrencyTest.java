@@ -20,7 +20,7 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import kr.hhplus.be.server.order.dto.OrderRequestDto;
+import kr.hhplus.be.server.order.dto.OrderRequest;
 import kr.hhplus.be.server.order.service.OrderFacade;
 import kr.hhplus.be.server.product.entity.ProductEntity;
 import kr.hhplus.be.server.product.repository.ProductJpaRepository;
@@ -101,7 +101,7 @@ public class OrderStockConcurrencyTest {
     	 
 	    //when
 	    for(Long id : idList) {
-	    	OrderRequestDto request = new OrderRequestDto(id ,productId, 3, null);
+	    	OrderRequest request = new OrderRequest(id ,productId, 3, null);
 	    	
 	    	executorService.submit(() -> {
                 try {

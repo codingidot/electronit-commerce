@@ -7,18 +7,18 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import kr.hhplus.be.server.order.dto.OrderResponseDto;
+import kr.hhplus.be.server.order.dto.OrderResponse;
 
 @Configuration
 public class BeanConfig {
 
 	@Bean
-    public RedisTemplate<String, OrderResponseDto> orderResponseRedisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, OrderResponseDto> template = new RedisTemplate<>();
+    public RedisTemplate<String, OrderResponse> orderResponseRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, OrderResponse> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
 
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new Jackson2JsonRedisSerializer<>(OrderResponseDto.class));
+        template.setValueSerializer(new Jackson2JsonRedisSerializer<>(OrderResponse.class));
 
         return template;
     }

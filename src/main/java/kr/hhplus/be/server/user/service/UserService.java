@@ -9,9 +9,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.hhplus.be.server.user.dto.BalanceResponseDto;
-import kr.hhplus.be.server.user.dto.ChargeRequestDto;
-import kr.hhplus.be.server.user.dto.ChargeResponseDto;
+import kr.hhplus.be.server.user.dto.BalanceResponse;
+import kr.hhplus.be.server.user.dto.ChargeRequest;
+import kr.hhplus.be.server.user.dto.ChargeResponse;
 import kr.hhplus.be.server.user.entity.UserEntity;
 import kr.hhplus.be.server.user.repository.UserRepository;
 
@@ -34,13 +34,13 @@ public class UserService {
 	}
 	
 	//유저 잔액 조회
-	public BalanceResponseDto getUserBalance(Long userId) throws Exception {
+	public BalanceResponse getUserBalance(Long userId) throws Exception {
 		
 		String key = BALANCE_KEY_PREFIX + userId;
 		
 		//Redis 캐시 조회
         BigDecimal cached = (BigDecimal) redisTemplate.opsForValue().get(key);
-        if (cached != null) return new BalanceResponseDto(cached);
+        if (cached != null) return new BalanceResponse(cached);
 
         //DB 조회
 		Optional<UserEntity> user = Optional.ofNullable(userRepository.findById(userId).orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다.")));
@@ -48,12 +48,12 @@ public class UserService {
 		
 		//Redis 캐시에 저장
         redisTemplate.opsForValue().set(key, userEntity.getBalance(), Duration.ofSeconds(30));//ttl 30초
-		return new BalanceResponseDto(userEntity.getBalance());
+		return new BalanceResponse(userEntity.getBalance());
 	}
 
 	//잔액충전
 	@Transactional(rollbackFor = Exception.class)
-	public ChargeResponseDto chargeBalance(ChargeRequestDto chargeRequestDto) throws Exception {
+	public ChargeResponse chargeBalance(ChargeRequest chargeRequestDto) throws Exception {
 		Long userId = chargeRequestDto.getUserId();
 		Optional<UserEntity> user = this.getUserInfo(userId);
 		UserEntity entity = user.get();
@@ -63,7 +63,7 @@ public class UserService {
 		
 		//Redis 캐시에 저장
         redisTemplate.opsForValue().set(key, entity.getBalance(), Duration.ofSeconds(30));//ttl 30초
-		return ChargeResponseDto.toDto(entity.getBalance());
+		return ChargeResponse.toDto(entity.getBalance());
 	}
 
 	//유저정보 변경

@@ -9,7 +9,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class OrderResponseDto {
+public class OrderResponse {
 
 	Long goodsId;
 	Long userId;

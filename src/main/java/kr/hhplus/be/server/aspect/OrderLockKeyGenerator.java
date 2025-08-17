@@ -3,7 +3,7 @@ package kr.hhplus.be.server.aspect;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Component;
 import kr.hhplus.be.server.annotation.DistributedLock;
-import kr.hhplus.be.server.order.dto.OrderRequestDto;
+import kr.hhplus.be.server.order.dto.OrderRequest;
 
 @Component
 public class OrderLockKeyGenerator implements LockKeyGenerator {
@@ -13,7 +13,7 @@ public class OrderLockKeyGenerator implements LockKeyGenerator {
         Object[] args = joinPoint.getArgs();
         String[] keyArr = new String[2];
         for (Object arg : args) {
-            if (arg instanceof OrderRequestDto requestDto) {
+            if (arg instanceof OrderRequest requestDto) {
                 keyArr[0] = "order:" + "productId:" + requestDto.getGoodsId();
                 keyArr[1] = "order:" + "userId:" + requestDto.getUserId();
                 return keyArr;

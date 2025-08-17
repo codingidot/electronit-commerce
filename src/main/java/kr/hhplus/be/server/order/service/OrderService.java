@@ -9,7 +9,7 @@ import java.util.Optional;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import kr.hhplus.be.server.order.dto.OrderResponseDto;
+import kr.hhplus.be.server.order.dto.OrderResponse;
 import kr.hhplus.be.server.order.entity.OrderEntity;
 import kr.hhplus.be.server.order.repository.OrderRepository;
 import kr.hhplus.be.server.product.entity.ProductEntity;
@@ -19,10 +19,10 @@ import kr.hhplus.be.server.user.entity.UserEntity;
 public class OrderService {
 	
 	private final OrderRepository orderRepository;
-    private final RedisTemplate<String, OrderResponseDto> redisTemplate;
+    private final RedisTemplate<String, OrderResponse> redisTemplate;
 
     public OrderService(OrderRepository orderRepository,
-                        RedisTemplate<String, OrderResponseDto> redisTemplate) {
+                        RedisTemplate<String, OrderResponse> redisTemplate) {
         this.orderRepository = orderRepository;
         this.redisTemplate = redisTemplate;
     }
@@ -39,11 +39,11 @@ public class OrderService {
 	}
 
 	//주문조회
-	public OrderResponseDto getOrderInfo(Long orderId) {
+	public OrderResponse getOrderInfo(Long orderId) {
 		String cacheKey = "order:" + orderId;
 
         // 1. Redis 캐시에서 조회
-        OrderResponseDto cachedOrder = redisTemplate.opsForValue().get(cacheKey);
+        OrderResponse cachedOrder = redisTemplate.opsForValue().get(cacheKey);
         if (cachedOrder != null) {
             return cachedOrder; // 캐시에 있으면 바로 반환
         }
@@ -53,7 +53,7 @@ public class OrderService {
 		if(order.isPresent()) {
 			OrderEntity entity = order.get();
 			
-			OrderResponseDto dto = new OrderResponseDto(entity.getGoodsId(), entity.getUserId(), entity.getCouponId(), entity.getCount(),
+			OrderResponse dto = new OrderResponse(entity.getGoodsId(), entity.getUserId(), entity.getCouponId(), entity.getCount(),
 					entity.getOrderPrice(), entity.getPayPrice(), entity.getOrderState(), entity.getOrderDate());
 			
 			// 3. Redis에 저장 (예: TTL 60초)

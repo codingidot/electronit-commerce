@@ -16,7 +16,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import kr.hhplus.be.server.annotation.DistributedLock;
-import kr.hhplus.be.server.order.dto.OrderRequestDto;
+import kr.hhplus.be.server.order.dto.OrderRequest;
 
 
 @Aspect
@@ -33,7 +33,7 @@ public class DistributedLockAspect {
     }
 
     @Around("execution(* kr.hhplus.be.server.order.service.OrderFacade.order(..)) && args(requestDto)")
-    public Object lockAop(ProceedingJoinPoint joinPoint, OrderRequestDto requestDto) throws Throwable {
+    public Object lockAop(ProceedingJoinPoint joinPoint, OrderRequest requestDto) throws Throwable {
 
     	MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
