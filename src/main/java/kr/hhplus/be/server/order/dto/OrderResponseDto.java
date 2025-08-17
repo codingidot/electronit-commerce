@@ -4,7 +4,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import kr.hhplus.be.server.order.enums.OrderState;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@AllArgsConstructor
+@Getter
 public class OrderResponseDto {
 
 	Long goodsId;
@@ -15,48 +19,4 @@ public class OrderResponseDto {
 	BigDecimal payPrice;
 	OrderState orderState;
 	LocalDateTime orderDate;
-	
-	public OrderResponseDto(Long goodsId, Long userId, Long couponId, int count, BigDecimal orderPrice,
-			BigDecimal payPrice, OrderState orderState, LocalDateTime orderDate) {
-		this.goodsId = goodsId;
-		this.userId = userId;
-		this.couponId = couponId;
-		this.count = count;
-		this.orderPrice = orderPrice;
-		this.payPrice = payPrice;
-		this.orderState = orderState;
-		this.orderDate = orderDate;
-	}
-
-	public Long getGoodsId() {
-		return goodsId;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public Long getCouponId() {
-		return couponId;
-	}
-
-	public int getCount() {
-		return count;
-	}
-
-	public BigDecimal getOrderPrice() {
-		return orderPrice;
-	}
-
-	public BigDecimal getPayPrice() {
-		return payPrice;
-	}
-
-	public OrderState getOrderState() {
-		return orderState;
-	}
-
-	public LocalDateTime getOrderDate() {
-		return orderDate;
-	}
 }
