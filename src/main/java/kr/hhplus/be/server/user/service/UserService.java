@@ -37,15 +37,12 @@ public class UserService {
 		
 		String key = BALANCE_KEY_PREFIX + userId;
 		
-		//Redis 캐시 조회
         BigDecimal cached = (BigDecimal) redisTemplate.opsForValue().get(key);
         if (cached != null) return new BalanceResponse(cached);
 
-        //DB 조회
 		UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다."));
 
-		//Redis 캐시에 저장
-        redisTemplate.opsForValue().set(key, userEntity.getBalance(), Duration.ofSeconds(30));//ttl 30초
+        redisTemplate.opsForValue().set(key, userEntity.getBalance(), Duration.ofSeconds(30));
 		return new BalanceResponse(userEntity.getBalance());
 	}
 
@@ -58,8 +55,7 @@ public class UserService {
 		userRepository.save(entity);
 		String key = BALANCE_KEY_PREFIX + userId;
 		
-		//Redis 캐시에 저장
-        redisTemplate.opsForValue().set(key, entity.getBalance(), Duration.ofSeconds(30));//ttl 30초
+        redisTemplate.opsForValue().set(key, entity.getBalance(), Duration.ofSeconds(30));
 		return ChargeResponse.toDto(entity.getBalance());
 	}
 
@@ -78,8 +74,7 @@ public class UserService {
 		userRepository.save(entity);
 		String key = BALANCE_KEY_PREFIX + entity.getUserId();
 		
-		//Redis 캐시에 저장
-        redisTemplate.opsForValue().set(key, entity.getBalance(), Duration.ofSeconds(30));//ttl 30초
+        redisTemplate.opsForValue().set(key, entity.getBalance(), Duration.ofSeconds(30));
 	}
 
 }
