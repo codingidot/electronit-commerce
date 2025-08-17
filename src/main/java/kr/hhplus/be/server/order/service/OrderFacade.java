@@ -9,9 +9,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.hhplus.be.server.annotation.DistributedLock;
 import kr.hhplus.be.server.coupon.entity.CouponEntity;
 import kr.hhplus.be.server.coupon.service.CouponService;
-import kr.hhplus.be.server.order.dto.OrderRequestDto;
+import kr.hhplus.be.server.order.dto.OrderRequest;
 import kr.hhplus.be.server.product.entity.ProductEntity;
 import kr.hhplus.be.server.product.service.ProductService;
 import kr.hhplus.be.server.user.entity.UserEntity;
@@ -34,11 +35,8 @@ public class OrderFacade {
 	}
 	
 	@Transactional
-	@Retryable(
-        value = { ObjectOptimisticLockingFailureException.class }, // 어떤 예외에서 재시도할지
-        maxAttempts = 3                    // 최대 재시도 횟수
-    )
-	public void order(OrderRequestDto request) throws Exception {
+	@DistributedLock(type="order", keys = {"'product:' + #request.goodsId", "'user:' + #request.userId"})
+	public void order(OrderRequest request) throws Exception {
 		//상품정보
 		Long goodsId = request.getGoodsId();
 		Optional<ProductEntity> productEntity = productService.getOrderProductInfo(goodsId);
@@ -63,10 +61,10 @@ public class OrderFacade {
 		}
 		
 		//유저정보
-		Optional<UserEntity> userInfo = userService.getUserInfo(request.getUserId());
+		UserEntity userInfo = userService.getUserInfo(request.getUserId());
 		userService.deductBalance(userInfo, totalPrice);//잔액차감
 		
 		//주문생성
-		orderService.createOrder(userInfo.get(), buyProduct, buyCnt, totalPrice, couponId);
+		orderService.createOrder(userInfo, buyProduct, buyCnt, totalPrice, couponId);
 	}
 }

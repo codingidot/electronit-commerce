@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.hhplus.be.server.coupon.dto.CouponIssueRequestDto;
+import kr.hhplus.be.server.coupon.dto.CouponIssueRequest;
 import kr.hhplus.be.server.coupon.service.CouponService;
 import kr.hhplus.be.server.dto.ResponseDto;
 
@@ -36,7 +36,7 @@ public class CouponController {
             description = "쿠폰 발급 요청",
             required = true,
             content = @Content(
-                schema = @Schema(implementation = CouponIssueRequestDto.class),
+                schema = @Schema(implementation = CouponIssueRequest.class),
                 examples = @ExampleObject(
                     value = "{\"userId\": 1, \"couponId\": 100}"
                 )
@@ -48,7 +48,7 @@ public class CouponController {
         }
     )
     public ResponseEntity<ResponseDto> issueCoupon(
-        @org.springframework.web.bind.annotation.RequestBody CouponIssueRequestDto requestDto) {
+        @org.springframework.web.bind.annotation.RequestBody CouponIssueRequest requestDto) {
 
         ResponseDto res = new ResponseDto();
         try {

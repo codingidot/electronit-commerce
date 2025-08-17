@@ -13,8 +13,14 @@ import kr.hhplus.be.server.order.converter.OrderStateConverter;
 import kr.hhplus.be.server.order.enums.OrderState;
 import kr.hhplus.be.server.product.entity.ProductEntity;
 import kr.hhplus.be.server.user.entity.UserEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class OrderEntity {
 
 	@Id
@@ -29,20 +35,6 @@ public class OrderEntity {
 	@Convert(converter = OrderStateConverter.class)
     private OrderState orderState;
 	LocalDateTime orderDate;
-	
-	protected OrderEntity(){};
-	private OrderEntity(Long orderId, Long goodsId, Long couponId, Long userId, BigDecimal orderPrice,
-			BigDecimal payPrice, int count, OrderState orderState, LocalDateTime orderDate) {
-		this.orderId = orderId;
-		this.goodsId = goodsId;
-		this.couponId = couponId;
-		this.userId = userId;
-		this.orderPrice = orderPrice;
-		this.payPrice = payPrice;
-		this.count = count;
-		this.orderState = orderState;
-		this.orderDate = orderDate;
-	}
 	
 	public static OrderEntity toEntity(UserEntity userInfo, ProductEntity buyProduct, int count, BigDecimal totalPrice, Long couponId) throws Exception {
 		int stock = buyProduct.getStock();
@@ -64,34 +56,4 @@ public class OrderEntity {
 		return new OrderEntity(null, goodsId, couponId, userInfo.getUserId(), buyProduct.getPrice().multiply(BigDecimal.valueOf(count)),
 							totalPrice, count, OrderState.REQUEST, LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 	}
-
-	public Long getOrderId() {
-		return orderId;
-	}
-	public Long getGoodsId() {
-		return goodsId;
-	}
-	public Long getCouponId() {
-		return couponId;
-	}
-	public Long getUserId() {
-		return userId;
-	}
-	public BigDecimal getOrderPrice() {
-		return orderPrice;
-	}
-	public BigDecimal getPayPrice() {
-		return payPrice;
-	}
-	public int getCount() {
-		return count;
-	}
-	public OrderState getOrderState() {
-		return orderState;
-	}
-
-	public LocalDateTime getOrderDate() {
-		return orderDate;
-	}
-	
 }

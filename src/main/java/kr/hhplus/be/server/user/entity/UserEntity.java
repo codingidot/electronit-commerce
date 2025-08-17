@@ -6,8 +6,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@NoArgsConstructor
+@Getter
+@Setter
 public class UserEntity {
 	
 	@Id
@@ -16,17 +22,6 @@ public class UserEntity {
     private String userName;
     private BigDecimal balance;
     
-    public UserEntity(){};
-
-	public Long getUserId() {
-		return userId;
-	}
-	public String getUserName() {
-		return userName;
-	}
-	public BigDecimal getBalance() {
-		return balance;
-	}
 	public void charge(BigDecimal amount) throws Exception {
 		if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new Exception("충전 금액은 0보다 커야 합니다.");
@@ -43,17 +38,4 @@ public class UserEntity {
 		}
         this.balance = remain;
 	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public void setBalance(BigDecimal balance) {
-		this.balance = balance;
-	}
-	
 }

@@ -20,7 +20,7 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import kr.hhplus.be.server.coupon.dto.CouponIssueRequestDto;
+import kr.hhplus.be.server.coupon.dto.CouponIssueRequest;
 import kr.hhplus.be.server.coupon.entity.CouponEntity;
 import kr.hhplus.be.server.coupon.repository.CouponIssueJpaRepository;
 import kr.hhplus.be.server.coupon.repository.CouponJpaRepository;
@@ -97,7 +97,7 @@ class CouponConcurrencyTest {
             executorService.submit(() -> {
                 try {
                 	startLatch.await();
-                    couponService.issueCoupon(new CouponIssueRequestDto(testCouponId, userId));
+                    couponService.issueCoupon(new CouponIssueRequest(testCouponId, userId));
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {

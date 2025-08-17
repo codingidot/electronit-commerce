@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.LockModeType;
-import kr.hhplus.be.server.product.dto.ProductRequestDto;
+import kr.hhplus.be.server.product.dto.ProductRequest;
 import kr.hhplus.be.server.product.entity.ProductEntity;
 
 @Repository
@@ -21,7 +21,7 @@ public class ProductRepositoryImpl implements ProductRepository{
     }
 	
 	@Override
-    public List<ProductEntity> findAll(ProductRequestDto param) {
+    public List<ProductEntity> findAll(ProductRequest param) {
         Long goodsId = param.getGoodsId();
         String name = param.getGoodsName();
         String goodsType = param.getGoodsType();

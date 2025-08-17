@@ -1,5 +1,9 @@
 package kr.hhplus.be.server.order.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+@AllArgsConstructor
+@Getter
 public enum OrderState {
 	
 	REQUEST("10", "주문요청"),
@@ -11,16 +15,4 @@ public enum OrderState {
     private final String code;
     private final String description;
 
-    OrderState(String code, String description) {
-        this.code = code;
-        this.description = description;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 }

@@ -6,8 +6,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class CouponIssueEntity {
 	
 	@Id
@@ -20,15 +28,6 @@ public class CouponIssueEntity {
 
     private String useYn;
 
-    public CouponIssueEntity() {}
-    
-    private CouponIssueEntity(Long issuedId, Long couponId, Long userId, String useYn) {
-    	this.issueId = issuedId;
-    	this.couponId = couponId;
-    	this.userId = userId;
-    	this.useYn = useYn;
-    }
-    
     public static CouponIssueEntity toEntity(Optional<CouponEntity> cpEntity, int userIssueCnt, Long userId) throws Exception {
     	CouponEntity coupon;
     	if(cpEntity.isEmpty()) {
@@ -50,36 +49,4 @@ public class CouponIssueEntity {
         }
         return new CouponIssueEntity(null,coupon.getCouponId(),userId, "N");
     }
-
-	public String getUseYn() {
-		return useYn;
-	}
-
-	public void setUseYn(String useYn) {
-		this.useYn = useYn;
-	}
-
-	public Long getIssueId() {
-		return issueId;
-	}
-
-	public Long getCouponId() {
-		return couponId;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setIssueId(Long issueId) {
-		this.issueId = issueId;
-	}
-
-	public void setCouponId(Long couponId) {
-		this.couponId = couponId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
 }

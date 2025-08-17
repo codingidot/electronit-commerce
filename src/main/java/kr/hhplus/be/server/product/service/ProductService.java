@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import kr.hhplus.be.server.product.dto.ProductRequestDto;
-import kr.hhplus.be.server.product.dto.ProductResponseDto;
+import kr.hhplus.be.server.product.dto.ProductRequest;
+import kr.hhplus.be.server.product.dto.ProductResponse;
 import kr.hhplus.be.server.product.entity.ProductEntity;
 import kr.hhplus.be.server.product.repository.ProductRepository;
 
@@ -21,8 +21,8 @@ public class ProductService {
 	}
 
 	//상품리스트정보 가져오기
-	public List<ProductResponseDto> getProductList(ProductRequestDto requestDto) {
-		return productRepository.findAll(requestDto).stream().map(ProductResponseDto::toDto).collect(Collectors.toList());
+	public List<ProductResponse> getProductList(ProductRequest requestDto) {
+		return productRepository.findAll(requestDto).stream().map(ProductResponse::toDto).collect(Collectors.toList());
 	}
 
 	//주문하는 상품정보 가져오기

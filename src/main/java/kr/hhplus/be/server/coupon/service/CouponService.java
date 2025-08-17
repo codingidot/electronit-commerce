@@ -8,7 +8,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.hhplus.be.server.coupon.dto.CouponIssueRequestDto;
+import kr.hhplus.be.server.coupon.dto.CouponIssueRequest;
 import kr.hhplus.be.server.coupon.entity.CouponEntity;
 import kr.hhplus.be.server.coupon.entity.CouponIssueEntity;
 import kr.hhplus.be.server.coupon.repository.CouponRepository;
@@ -34,7 +34,7 @@ public class CouponService {
         value = { ObjectOptimisticLockingFailureException.class }, // 어떤 예외에서 재시도할지
         maxAttempts = 3                    // 최대 재시도 횟수
     )
-	public void issueCoupon(CouponIssueRequestDto requestDto) throws Exception {
+	public void issueCoupon(CouponIssueRequest requestDto) throws Exception {
 		Long userId = requestDto.getUserId();
 		Long couponId = requestDto.getCouponId();
 		Optional<CouponEntity> coupon = couponRepository.getCoupon(couponId);//쿠폰정보
