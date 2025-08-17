@@ -61,10 +61,10 @@ public class OrderFacade {
 		}
 		
 		//유저정보
-		Optional<UserEntity> userInfo = userService.getUserInfo(request.getUserId());
+		UserEntity userInfo = userService.getUserInfo(request.getUserId());
 		userService.deductBalance(userInfo, totalPrice);//잔액차감
 		
 		//주문생성
-		orderService.createOrder(userInfo.get(), buyProduct, buyCnt, totalPrice, couponId);
+		orderService.createOrder(userInfo, buyProduct, buyCnt, totalPrice, couponId);
 	}
 }

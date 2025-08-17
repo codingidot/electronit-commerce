@@ -3,7 +3,6 @@ package kr.hhplus.be.server.user.service;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.Optional;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -28,8 +27,8 @@ public class UserService {
 	}
 	
 	//유저정보조회
-	public Optional<UserEntity> getUserInfo(Long userId) throws Exception {
-		Optional<UserEntity> user = Optional.ofNullable(userRepository.findById(userId).orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다.")));
+	public UserEntity getUserInfo(Long userId) throws Exception {
+		UserEntity user = userRepository.findById(userId).orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다."));
 		return user;
 	}
 	
@@ -43,9 +42,8 @@ public class UserService {
         if (cached != null) return new BalanceResponse(cached);
 
         //DB 조회
-		Optional<UserEntity> user = Optional.ofNullable(userRepository.findById(userId).orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다.")));
-		UserEntity userEntity = user.get();
-		
+		UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다."));
+
 		//Redis 캐시에 저장
         redisTemplate.opsForValue().set(key, userEntity.getBalance(), Duration.ofSeconds(30));//ttl 30초
 		return new BalanceResponse(userEntity.getBalance());
@@ -55,8 +53,7 @@ public class UserService {
 	@Transactional(rollbackFor = Exception.class)
 	public ChargeResponse chargeBalance(ChargeRequest chargeRequestDto) throws Exception {
 		Long userId = chargeRequestDto.getUserId();
-		Optional<UserEntity> user = this.getUserInfo(userId);
-		UserEntity entity = user.get();
+		UserEntity entity =  this.getUserInfo(userId);
 		entity.charge(chargeRequestDto.getAmount());
 		userRepository.save(entity);
 		String key = BALANCE_KEY_PREFIX + userId;
@@ -72,11 +69,11 @@ public class UserService {
 	}
 
 	//잔액차감
-	public void deductBalance(Optional<UserEntity> userInfo, BigDecimal totalPrice) throws Exception {
-		if(userInfo.isEmpty()) {
+	public void deductBalance(UserEntity userInfo, BigDecimal totalPrice) throws Exception {
+		if(userInfo == null) {
 			throw new Exception("유저 정보가 존재하지 않습니다.");
 		}
-		UserEntity entity = userInfo.get();
+		UserEntity entity = userInfo;
 		entity.deduct(totalPrice);
 		userRepository.save(entity);
 		String key = BALANCE_KEY_PREFIX + entity.getUserId();
