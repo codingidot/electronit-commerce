@@ -2,11 +2,17 @@ package kr.hhplus.be.server.coupon.service;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import kr.hhplus.be.server.coupon.dto.CouponIssueRequest;
 import kr.hhplus.be.server.coupon.entity.CouponEntity;
@@ -17,10 +23,13 @@ import kr.hhplus.be.server.coupon.repository.CouponRepository;
 public class CouponService {
 	
 	private final CouponRepository couponRepository;
-	private static int MAX_RETRY = 5;
+	private final RedissonClient redissonClient;
+	private final TransactionTemplate transactionTemplate;
 	
-	CouponService(CouponRepository couponRepository){
+	CouponService(CouponRepository couponRepository,RedissonClient redissonClient,TransactionTemplate transactionTemplate){
 		this.couponRepository = couponRepository; 
+		this.redissonClient = redissonClient;
+		this.transactionTemplate = transactionTemplate;
 	}
 	
 	//쿠폰정보 가져오기
@@ -29,22 +38,39 @@ public class CouponService {
 	}
 
 	//쿠폰 발급
-	@Transactional
-	@Retryable(
-        value = { ObjectOptimisticLockingFailureException.class }, // 어떤 예외에서 재시도할지
-        maxAttempts = 3                    // 최대 재시도 횟수
-    )
 	public void issueCoupon(CouponIssueRequest requestDto) throws Exception {
 		Long userId = requestDto.getUserId();
 		Long couponId = requestDto.getCouponId();
-		Optional<CouponEntity> coupon = couponRepository.getCoupon(couponId);//쿠폰정보
-		int userIssueCnt = couponRepository.checkUserCouponHave(couponId, userId);//사용자가 해당 쿠폰을 발급받은 수
-		CouponIssueEntity issueEntity = CouponIssueEntity.toEntity(coupon, userIssueCnt, userId);//쿠폰발급 생성
-		CouponEntity couponEntity = coupon.get();
-		couponEntity.setIssuedCount(couponEntity.getIssuedCount()+1);//쿠폰 발급 수 +1
-		//저장
-		couponRepository.couponSave(couponEntity);
-		couponRepository.issueSave(issueEntity);
+		String lockKey = "lock:coupon:" + couponId;
+        RLock lock = redissonClient.getLock(lockKey);
+
+        try {
+            if (lock.tryLock(10, 7, TimeUnit.SECONDS)) {
+            	transactionTemplate.execute(status -> {
+            		try {
+            			Optional<CouponEntity> coupon = couponRepository.getCoupon(couponId);//쿠폰정보
+                		int userIssueCnt = couponRepository.checkUserCouponHave(couponId, userId);//사용자가 해당 쿠폰을 발급받은 수
+                		CouponIssueEntity issueEntity = CouponIssueEntity.toEntity(coupon, userIssueCnt, userId);//쿠폰발급 생성
+                		System.out.println("조회한 쿠폰 아이디 => " + coupon.get().getCouponId());
+                		CouponEntity couponEntity = coupon.get();
+                		couponEntity.setIssuedCount(couponEntity.getIssuedCount()+1);//쿠폰 발급 수 +1
+                		//저장
+                		couponRepository.couponSave(couponEntity);
+                		couponRepository.issueSave(issueEntity);
+            		}catch(Exception e) {
+            			status.setRollbackOnly();
+            		}
+            		
+            	    return null;
+            	});
+            }else {
+            	throw new Exception("해당 쿠폰을 발급하려는 사용자가 많습니다. 잠시후 다시 시도해주세요.");     	
+            }
+        }finally {
+            if (lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
+        }
 	}
 
 	//쿠폰가격 적용

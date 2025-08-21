@@ -25,8 +25,5 @@ public class CouponEntity {
     private BigDecimal couponValue;
     private int count;
     private int issuedCount;
-    
-    @Version
-    private Long version;
 
 }
