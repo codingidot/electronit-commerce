@@ -54,5 +54,22 @@ public class ProductController {
         }
         return ResponseEntity.ok(res);
     }
+    
+    //최근 3일간 가장 많이 주문된 top 3 상품코드 
+    @GetMapping("/bestThreeProduct")
+    public ResponseEntity<ResponseDto> getTop3Products(ProductRequest requestDto){
+        ResponseDto res = new ResponseDto();
+
+        try {
+            List<String> list = productService.getTop3Products();
+            res.setData(list);
+        } catch(Exception e) {
+            e.printStackTrace();
+            res.setMessage("상품조회에 실패하였습니다.");
+            res.setCode(500);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+        }
+        return ResponseEntity.ok(res);
+    }
 
 }

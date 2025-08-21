@@ -97,7 +97,7 @@ class CouponConcurrencyTest {
             executorService.submit(() -> {
                 try {
                 	startLatch.await();
-                    couponService.issueCoupon(new CouponIssueRequest(testCouponId, userId));
+                    couponService.issueCoupon(new CouponIssueRequest(userId, testCouponId));
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {

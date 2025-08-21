@@ -1,13 +1,20 @@
 package kr.hhplus.be.server.order.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Optional;
 
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import kr.hhplus.be.server.annotation.DistributedLock;
 import kr.hhplus.be.server.coupon.entity.CouponEntity;
@@ -25,13 +32,15 @@ public class OrderFacade {
 	private final UserService userService;
 	private final CouponService couponService;
 	private final OrderService orderService;
+	private final StringRedisTemplate redisTemplate;
 	private static int MAX_RETRY = 5;
 	
-	OrderFacade(ProductService productService,UserService userService, CouponService couponService, OrderService orderService){
+	OrderFacade(ProductService productService,UserService userService, CouponService couponService, OrderService orderService, StringRedisTemplate redisTemplate){
 		this.productService = productService;
 		this.userService = userService;
 		this.couponService = couponService;
 		this.orderService = orderService;
+		this.redisTemplate = redisTemplate;
 	}
 	
 	@Transactional
@@ -66,5 +75,23 @@ public class OrderFacade {
 		
 		//주문생성
 		orderService.createOrder(userInfo, buyProduct, buyCnt, totalPrice, couponId);
+		
+		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+	        @Override
+	        public void afterCommit() {
+	        	//주문 성공 시 상품 주문수 + 1
+	        	String today = LocalDate.now().toString();
+	            String key = "product:rank:" + today;
+	            redisTemplate.opsForZSet().incrementScore(key, goodsId.toString(), 1);
+	            
+	            // TTL 확인
+	            Long expire = redisTemplate.getExpire(key);
+	            if (expire == null || expire == -1 || expire == -2) { // -1: 만료 없음, -2: 키 없음
+	                // 오늘 기준 +2일 23:59:59
+	                LocalDateTime expireAt = LocalDate.now().plusDays(2).atTime(23, 59, 59);
+	                redisTemplate.expireAt(key, Date.from(expireAt.atZone(ZoneId.systemDefault()).toInstant()));
+	            }
+	        }
+	    });
 	}
 }
