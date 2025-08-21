@@ -6,12 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.retry.annotation.Retryable;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import kr.hhplus.be.server.coupon.dto.CouponIssueRequest;
@@ -25,11 +21,13 @@ public class CouponService {
 	private final CouponRepository couponRepository;
 	private final RedissonClient redissonClient;
 	private final TransactionTemplate transactionTemplate;
+	private final StringRedisTemplate redisTemplate;
 	
-	CouponService(CouponRepository couponRepository,RedissonClient redissonClient,TransactionTemplate transactionTemplate){
+	CouponService(CouponRepository couponRepository,RedissonClient redissonClient,TransactionTemplate transactionTemplate,StringRedisTemplate redisTemplate){
 		this.couponRepository = couponRepository; 
 		this.redissonClient = redissonClient;
 		this.transactionTemplate = transactionTemplate;
+		this.redisTemplate = redisTemplate;
 	}
 	
 	//쿠폰정보 가져오기
@@ -42,16 +40,44 @@ public class CouponService {
 		Long userId = requestDto.getUserId();
 		Long couponId = requestDto.getCouponId();
 		String lockKey = "lock:coupon:" + couponId;
+		String remainKey = "coupon:remain:" + couponId;
+		
         RLock lock = redissonClient.getLock(lockKey);
 
         try {
             if (lock.tryLock(10, 7, TimeUnit.SECONDS)) {
+            	
+            	 // 1. 캐시에서 남은 개수 조회
+                String remainStr = redisTemplate.opsForValue().get(remainKey);
+                Long remain = remainStr != null ? Long.parseLong(remainStr) : null;
+
+                if (remain == null) {
+                    // 캐시에 없으면 DB 조회
+                    Optional<CouponEntity> couponOpt = couponRepository.getCoupon(couponId);
+                    if (couponOpt.isEmpty()) {
+                        throw new IllegalArgumentException("해당 쿠폰이 존재하지 않습니다. couponId=" + couponId);
+                    }
+                    CouponEntity couponEntity = couponOpt.get();
+                    long remainCnt = couponEntity.getCount() - couponEntity.getIssuedCount();
+                    remain = remainCnt;
+
+                    // 캐시에 저장 (TTL 5분 예시)
+                    redisTemplate.opsForValue().set(remainKey, String.valueOf(remainCnt), 5, TimeUnit.MINUTES);
+                }
+
+                // 2. 선착순 마감 체크
+                if (remain <= 0) {
+                    throw new IllegalStateException("해당 쿠폰은 선착순 마감되었습니다. couponId=" + couponId);
+                }
+
+                // 3. 캐시에서 -1 처리
+                Long afterDecr = redisTemplate.opsForValue().decrement(remainKey);
+            	
             	transactionTemplate.execute(status -> {
             		try {
             			Optional<CouponEntity> coupon = couponRepository.getCoupon(couponId);//쿠폰정보
                 		int userIssueCnt = couponRepository.checkUserCouponHave(couponId, userId);//사용자가 해당 쿠폰을 발급받은 수
                 		CouponIssueEntity issueEntity = CouponIssueEntity.toEntity(coupon, userIssueCnt, userId);//쿠폰발급 생성
-                		System.out.println("조회한 쿠폰 아이디 => " + coupon.get().getCouponId());
                 		CouponEntity couponEntity = coupon.get();
                 		couponEntity.setIssuedCount(couponEntity.getIssuedCount()+1);//쿠폰 발급 수 +1
                 		//저장
@@ -59,8 +85,12 @@ public class CouponService {
                 		couponRepository.issueSave(issueEntity);
             		}catch(Exception e) {
             			status.setRollbackOnly();
-            		}
-            		
+            		}finally {
+            	        // 롤백이면 캐시 복원 (+1)
+            	        if (status.isRollbackOnly()) {
+            	        	redisTemplate.opsForValue().increment(remainKey);
+            	        }
+            	    }
             	    return null;
             	});
             }else {
