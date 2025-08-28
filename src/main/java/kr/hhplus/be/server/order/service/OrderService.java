@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.hhplus.be.server.order.dto.OrderResponse;
 import kr.hhplus.be.server.order.entity.OrderEntity;
@@ -27,15 +29,16 @@ public class OrderService {
         this.redisTemplate = redisTemplate;
     }
 
-	public void insertOrder(OrderEntity order) {
-		orderRepository.insertOrderInfo(order);
+	public OrderEntity insertOrder(OrderEntity order) {
+		return orderRepository.insertOrderInfo(order);
 	}
 
 	//주문생성
-	public void createOrder(UserEntity userInfo, ProductEntity buyProduct, int count, BigDecimal totalPrice, Long couponId) throws Exception {
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public OrderEntity createOrder(UserEntity userInfo, ProductEntity buyProduct, int count, BigDecimal totalPrice, Long couponId) throws Exception {
 		//주문 테이블에 insert
 		OrderEntity order = OrderEntity.toEntity(userInfo, buyProduct, count, totalPrice, couponId);
-		this.insertOrder(order);
+		return this.insertOrder(order);
 	}
 
 	//주문조회

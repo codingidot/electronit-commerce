@@ -16,8 +16,8 @@ public class OrderRepositoryImpl implements OrderRepository{
     }
 	
 	@Override
-	public void insertOrderInfo(OrderEntity entity) {
-		orderJpaRepository.save(entity);
+	public OrderEntity insertOrderInfo(OrderEntity entity) {
+		return orderJpaRepository.save(entity);
 	}
 
 	@Override

@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.hhplus.be.server.product.dto.ProductRequest;
 import kr.hhplus.be.server.product.dto.ProductResponse;
@@ -38,6 +40,7 @@ public class ProductService {
 	}
 
 	//재고차감
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ProductEntity deductStock(Optional<ProductEntity> productEntity, int count) throws Exception {
 		if(productEntity.isEmpty()) {
 			throw new Exception("상품 정보가 없습니다.");
@@ -75,5 +78,15 @@ public class ProductService {
 	    Set<String> topProducts = redisTemplate.opsForZSet().reverseRange(destKey, 0, 2);
 	    return topProducts == null ? List.of() : new ArrayList<>(topProducts);
     }
+
+	
+	//재고 복원
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void restoreStock(ProductEntity buyProduct, int buyCnt) {
+		System.out.println(buyProduct.getStock() +"애서 재고 => " + (buyProduct.getStock() + buyCnt));
+		int stock = buyProduct.getStock() + buyCnt;
+		buyProduct.setStock(stock);
+		productRepository.save(buyProduct);
+	}
 
 }
