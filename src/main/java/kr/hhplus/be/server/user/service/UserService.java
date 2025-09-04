@@ -5,6 +5,7 @@ import java.time.Duration;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.hhplus.be.server.user.dto.BalanceResponse;
@@ -69,6 +70,7 @@ public class UserService {
     }
 
     // 잔액 차감
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void deductBalance(UserEntity userInfo, BigDecimal totalPrice) throws Exception {
         if (userInfo == null) {
             throw new Exception("유저 정보가 존재하지 않습니다.");
@@ -80,4 +82,11 @@ public class UserService {
         String key = BALANCE_KEY_PREFIX + userInfo.getUserId();
         redisTemplate.opsForValue().set(key, userInfo.getBalance(), Duration.ofSeconds(30));
     }
+
+    //유저 잔액 복구
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void refundBalance(UserEntity userInfo, BigDecimal totalPrice) {
+		userInfo.setBalance(userInfo.getBalance().add(totalPrice));
+		userRepository.save(userInfo);
+	}
 }
