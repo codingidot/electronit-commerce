@@ -2,17 +2,17 @@ package kr.hhplus.be.server.order.service;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Optional;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.hhplus.be.server.order.dto.OrderResponse;
 import kr.hhplus.be.server.order.entity.OrderEntity;
+import kr.hhplus.be.server.order.event.OrderCreatedEvent;
 import kr.hhplus.be.server.order.repository.OrderRepository;
 import kr.hhplus.be.server.product.entity.ProductEntity;
 import kr.hhplus.be.server.user.entity.UserEntity;
@@ -64,6 +64,11 @@ public class OrderService {
 			return dto;
 		}
 		return null;
+	}
+	
+	@KafkaListener(topics = "order-event", groupId = "order-consumer-group")
+	public void sendOrderInfo(OrderCreatedEvent order) {
+	    System.out.println("주문번호: " + order.getOrderId() + ", 금액: " + order.getTotalPrice() + ", 주문자: " + order.getUserId());
 	}
 
 }
