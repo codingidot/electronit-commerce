@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import kr.hhplus.be.server.annotation.DistributedLock;
@@ -31,15 +32,15 @@ public class OrderFacade {
 	private final CouponService couponService;
 	private final OrderService orderService;
 	private final StringRedisTemplate redisTemplate;
-	private final ApplicationEventPublisher eventPublisher;
+	private final KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
 	
-	OrderFacade(ProductService productService,UserService userService, CouponService couponService, OrderService orderService, StringRedisTemplate redisTemplate, ApplicationEventPublisher eventPublisher){
+	OrderFacade(ProductService productService,UserService userService, CouponService couponService, OrderService orderService, StringRedisTemplate redisTemplate, KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate){
 		this.productService = productService;
 		this.userService = userService;
 		this.couponService = couponService;
 		this.orderService = orderService;
 		this.redisTemplate = redisTemplate;
-		this.eventPublisher = eventPublisher;
+		this.kafkaTemplate = kafkaTemplate;
 	}
 	
 	@DistributedLock(type="order", keys = {"'product:' + #request.goodsId", "'user:' + #request.userId"})
@@ -88,7 +89,7 @@ public class OrderFacade {
 			step = OrderStep.COMPLETED;
 			
 			//주문정보 전송(외부api)
-			eventPublisher.publishEvent(new OrderCreatedEvent(createdOrder.getOrderId(), createdOrder.getUserId(), createdOrder.getPayPrice()));
+			kafkaTemplate.send("order-event", createdOrder.getOrderId().toString(), new OrderCreatedEvent(createdOrder.getOrderId(), createdOrder.getUserId(), createdOrder.getPayPrice()));
 			
 			
 			//캐시 작업

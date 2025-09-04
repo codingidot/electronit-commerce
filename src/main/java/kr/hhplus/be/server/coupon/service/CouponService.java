@@ -2,19 +2,24 @@ package kr.hhplus.be.server.coupon.service;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import kr.hhplus.be.server.coupon.dto.CouponIssueRequest;
 import kr.hhplus.be.server.coupon.entity.CouponEntity;
 import kr.hhplus.be.server.coupon.entity.CouponIssueEntity;
+import kr.hhplus.be.server.coupon.event.CouponIssueEvent;
 import kr.hhplus.be.server.coupon.repository.CouponRepository;
-
+import kr.hhplus.be.server.order.event.OrderCreatedEvent;
 @Service
 public class CouponService {
 	
@@ -22,12 +27,14 @@ public class CouponService {
 	private final RedissonClient redissonClient;
 	private final TransactionTemplate transactionTemplate;
 	private final StringRedisTemplate redisTemplate;
+	private final KafkaTemplate<String, CouponIssueEvent> kafkaTemplate;
 	
-	CouponService(CouponRepository couponRepository,RedissonClient redissonClient,TransactionTemplate transactionTemplate,StringRedisTemplate redisTemplate){
+	CouponService(CouponRepository couponRepository,RedissonClient redissonClient,TransactionTemplate transactionTemplate,StringRedisTemplate redisTemplate,KafkaTemplate<String, CouponIssueEvent> kafkaTemplate){
 		this.couponRepository = couponRepository; 
 		this.redissonClient = redissonClient;
 		this.transactionTemplate = transactionTemplate;
 		this.redisTemplate = redisTemplate;
+		this.kafkaTemplate = kafkaTemplate;
 	}
 	
 	//쿠폰정보 가져오기
@@ -35,7 +42,7 @@ public class CouponService {
 		return couponRepository.getCoupon(couponId);
 	}
 
-	//쿠폰 발급
+	//쿠폰 발급(redis 분산락)
 	public void issueCoupon(CouponIssueRequest requestDto) throws Exception {
 		Long userId = requestDto.getUserId();
 		Long couponId = requestDto.getCouponId();
@@ -67,7 +74,7 @@ public class CouponService {
 
                 // 2. 선착순 마감 체크
                 if (remain <= 0) {
-                    throw new IllegalStateException("해당 쿠폰은 선착순 마감되었습니다. couponId=" + couponId);
+                    throw new IllegalStateException("해당 쿠폰은 선착순 마감되었습니다. couponId=" + couponId+ " remain= "+remain);
                 }
 
                 // 3. 캐시에서 -1 처리
@@ -101,6 +108,45 @@ public class CouponService {
                 lock.unlock();
             }
         }
+	}
+
+	//카프카로 이벤트 발행하여 쿠폰발급
+	public void issueCouponWithKafka(CouponIssueRequest requestDto) throws Exception {
+		Long userId = requestDto.getUserId();
+		Long couponId = requestDto.getCouponId();
+		
+        // 캐시에 없으면 DB 조회
+        Optional<CouponEntity> couponOpt = couponRepository.getCoupon(couponId);
+        if (couponOpt.isEmpty()) {
+            throw new IllegalArgumentException("해당 쿠폰이 존재하지 않습니다. couponId=" + couponId);
+        }
+        CouponEntity couponEntity = couponOpt.get();
+        long remainCnt = couponEntity.getCount() - couponEntity.getIssuedCount();
+        Long remain = remainCnt;
+
+        // 2. 선착순 마감 체크
+        if (remain <= 0) {
+            throw new IllegalStateException("해당 쿠폰은 선착순 마감되었습니다. couponId=" + couponId);
+        }
+
+        kafkaTemplate.send("coupon-issue", couponId.toString(), new CouponIssueEvent(couponId, userId));
+	
+	}
+	
+	@Transactional
+	@KafkaListener(topics = "coupon-issue", groupId = "coupon-issue-group")
+	public void sendOrderInfo(CouponIssueEvent event) throws Exception {
+
+		Long couponId = event.getCouponId();
+		Long userId = event.getUserId();
+		Optional<CouponEntity> coupon = couponRepository.getCoupon(couponId);//쿠폰정보
+		int userIssueCnt = couponRepository.checkUserCouponHave(couponId, userId);//사용자가 해당 쿠폰을 발급받은 수
+		CouponIssueEntity issueEntity = CouponIssueEntity.toEntity(coupon, userIssueCnt, userId);//쿠폰발급 생성
+		CouponEntity couponEntity = coupon.get();
+		couponEntity.setIssuedCount(couponEntity.getIssuedCount()+1);//쿠폰 발급 수 +1
+		//저장
+		couponRepository.couponSave(couponEntity);
+		couponRepository.issueSave(issueEntity);
 	}
 
 	//쿠폰가격 적용
