@@ -36,15 +36,25 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.retry:spring-retry")
 	implementation("org.springframework.boot:spring-boot-starter-aop")
+	implementation("org.springframework.boot:spring-boot-starter")
 	
-	//redis
+	// redis
 	implementation("org.redisson:redisson-spring-boot-starter:3.28.0")
 	
-	//swagger 
-	implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
+	// kafka
+	implementation("org.springframework.kafka:spring-kafka")
+	
+	// swagger 
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 	
     // DB
 	runtimeOnly("com.mysql:mysql-connector-j")
+
+    // Lombok
+	compileOnly("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
+	testCompileOnly("org.projectlombok:lombok")
+	testAnnotationProcessor("org.projectlombok:lombok")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -53,6 +63,7 @@ dependencies {
 	testImplementation("org.testcontainers:mysql")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
+
 
 tasks.withType<Test> {
 	useJUnitPlatform()

@@ -3,16 +3,16 @@ package kr.hhplus.be.server.order.event;
 import java.math.BigDecimal;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
+@NoArgsConstructor // Jackson용
+@AllArgsConstructor
 public class OrderCreatedEvent {
-    private final Long orderId;
-    private final Long userId;
-    private final BigDecimal totalPrice;
-
-    public OrderCreatedEvent(Long orderId, Long userId, BigDecimal totalPrice) {
-        this.orderId = orderId;
-        this.userId = userId;
-        this.totalPrice = totalPrice;
-    }
+    private Long orderId;
+    private Long userId;
+    private BigDecimal totalPrice;
 }
